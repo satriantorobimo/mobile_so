@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "528911309491",
+    "project_id": "mobitech-mobile-stock-opname",
+    "storage_bucket": "mobitech-mobile-stock-opname.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528911309491:android:9037cfbfc671a3c74aeec6",
+        "android_client_info": {
+          "package_name": "mobi.tech.stockopname.mobile_stock_opname"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6XwpFwnzdPDea_2jxVdS2LRM2M0x2yGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
