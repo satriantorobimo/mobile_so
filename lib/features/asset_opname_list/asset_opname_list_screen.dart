@@ -1,8 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_so/features/asset_opname_list/bloc/asset_opname_list_bloc/bloc.dart';
+import 'package:mobile_so/features/asset_opname_list/domain/repo/asset_opname_list_repo.dart';
+import 'package:mobile_so/features/navbar/navbar_provider.dart';
+import 'package:mobile_so/utility/general_util.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
 import 'package:mobile_so/utility/string_router_util.dart';
+import 'package:provider/provider.dart';
 
 class AssetOpnameListScreen extends StatefulWidget {
   const AssetOpnameListScreen({super.key});
@@ -15,10 +21,13 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
   String name = '';
   String uid = '';
   String company = '';
+  AssetOpnameListBloc assetOpnameListBloc =
+      AssetOpnameListBloc(assetOpnameListRepo: AssetOpnameListRepo());
 
   @override
   void initState() {
     getUserData();
+    assetOpnameListBloc.add(const AssetOpnameListAttempt());
     super.initState();
   }
 
@@ -54,8 +63,8 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  height: 65,
-                  width: 65,
+                  height: MediaQuery.of(context).size.width * 0.13,
+                  width: MediaQuery.of(context).size.width * 0.13,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
@@ -73,42 +82,47 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    AutoSizeText(name,
+                    Text(name,
                         style: TextStyle(
                             fontFamily: GoogleFonts.poppins().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: GeneralUtil.fontSize(context) * 0.3,
                             color: Colors.white)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AutoSizeText(uid,
+                        Text(uid,
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
-                        AutoSizeText(company,
+                        Text(company,
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
-                              size: 12,
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015,
+                              width: MediaQuery.of(context).size.height * 0.015,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
                             ),
                             const SizedBox(width: 4),
-                            AutoSizeText('Active',
+                            Text('Active',
                                 style: TextStyle(
                                     fontFamily:
                                         GoogleFonts.poppins().fontFamily,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize:
+                                        GeneralUtil.fontSize(context) * 0.3,
                                     color: Colors.white)),
                           ],
                         )
@@ -119,319 +133,257 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0, left: 24.0, right: 24.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.width * 0.12,
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green,
-                          ),
-                          alignment: Alignment.center,
-                          child: AutoSizeText('70%',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white)),
+          BlocListener(
+              bloc: assetOpnameListBloc,
+              listener: (_, AssetOpnameListState state) {
+                if (state is AssetOpnameListLoading) {}
+                if (state is AssetOpnameListLoaded) {}
+                if (state is AssetOpnameListError) {
+                  GeneralUtil().showSnackBarError(context, state.error!);
+                }
+                if (state is AssetOpnameListException) {
+                  if (state.error.toLowerCase() == 'unauthorized access') {
+                    GeneralUtil().showSnackBarError(context, 'Session Expired');
+                    var bottomBarProvider =
+                        Provider.of<NavbarProvider>(context, listen: false);
+                    bottomBarProvider.setPage(0);
+                    bottomBarProvider.setTab(0);
+                    SharedPrefUtil.clearSharedPref();
+                    Future.delayed(const Duration(seconds: 1), () {
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          StringRouterUtil.loginScreenRoute, (route) => false);
+                    });
+                  } else {
+                    GeneralUtil().showSnackBarError(context, state.error);
+                  }
+                }
+              },
+              child: BlocBuilder(
+                  bloc: assetOpnameListBloc,
+                  builder: (context, AssetOpnameListState state) {
+                    if (state is AssetOpnameListLoading) {
+                      return const Center(
+                        child: SizedBox(
+                          width: 45,
+                          height: 45,
+                          child: CircularProgressIndicator(),
                         ),
-                        SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Opname No',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 012.05.2024',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Periode Opname',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 12 to 26 May 2024',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Total Asset Opname',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 300',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Company',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': PT ABC',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context,
-                                StringRouterUtil.dashboardDetailScreenRoute);
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color(0xFF3B3B3B),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            padding: EdgeInsets.all(5),
-                            child: Center(
-                              child: Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () {
-                            // Navigator.pushNamed(context,
-                            //     StringRouterUtil.addRequestScreenRoute);
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.add_circle_rounded,
-                              color: Color(0xFF00669B),
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 40, bottom: 40),
-                  child: Container(
-                    width: double.infinity,
-                    height: 1.5,
-                    color: Color(0xFFFF7122),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.width * 0.12,
-                          width: MediaQuery.of(context).size.width * 0.12,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red,
-                          ),
-                          alignment: Alignment.center,
-                          child: AutoSizeText('20%',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white)),
-                        ),
-                        SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Opname No',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 012.05.2024',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Periode Opname',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 12 to 26 May 2024',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Total Asset Opname',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': 300',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.29,
-                                  child: AutoSizeText('Company',
-                                      style: TextStyle(
-                                          fontFamily:
-                                              GoogleFonts.poppins().fontFamily,
-                                          fontSize: 12,
-                                          color: Colors.white)),
-                                ),
-                                AutoSizeText(': PT DEF',
-                                    style: TextStyle(
-                                        fontFamily:
-                                            GoogleFonts.poppins().fontFamily,
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context,
-                                StringRouterUtil.dashboardDetailScreenRoute);
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color(0xFF3B3B3B),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8))),
-                            padding: EdgeInsets.all(5),
-                            child: Center(
-                              child: Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context,
-                                StringRouterUtil.assetOpnameScreenRoute);
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.add_circle_rounded,
-                              color: Color(0xFF00669B),
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
+                      );
+                    }
+                    if (state is AssetOpnameListLoaded) {
+                      return state.assetOpnameListResponseModel.data!.isNotEmpty
+                          ? ListView.separated(
+                              itemBuilder: (context, index) {
+                                return Theme(
+                                  data: ThemeData(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context,
+                                          StringRouterUtil
+                                              .assetOpnameListDetailScreenRoute,
+                                          arguments: state
+                                              .assetOpnameListResponseModel
+                                              .data![index]
+                                              .code);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.135,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.135,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: state
+                                                            .assetOpnameListResponseModel
+                                                            .data![index]
+                                                            .percentageOpname <=
+                                                        50.0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: AutoSizeText(
+                                                  '${state.assetOpnameListResponseModel.data![index].percentageOpname}%',
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          GoogleFonts.poppins()
+                                                              .fontFamily,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 17,
+                                                      color: Colors.white)),
+                                            ),
+                                            SizedBox(width: 16),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.29,
+                                                      child: AutoSizeText(
+                                                          'Opname No',
+                                                          style: TextStyle(
+                                                              fontFamily: GoogleFonts
+                                                                      .poppins()
+                                                                  .fontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                    AutoSizeText(
+                                                        ': ${state.assetOpnameListResponseModel.data![index].code}',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                GoogleFonts
+                                                                        .poppins()
+                                                                    .fontFamily,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.29,
+                                                      child: AutoSizeText(
+                                                          'Periode Opname ',
+                                                          style: TextStyle(
+                                                              fontFamily: GoogleFonts
+                                                                      .poppins()
+                                                                  .fontFamily,
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        AutoSizeText(
+                                                            ': ${GeneralUtil.dateConvertList(state.assetOpnameListResponseModel.data![index].opnameStartDate!)} to',
+                                                            style: TextStyle(
+                                                                fontFamily: GoogleFonts
+                                                                        .poppins()
+                                                                    .fontFamily,
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .white)),
+                                                        AutoSizeText(
+                                                            '  ${GeneralUtil.dateConvertList(state.assetOpnameListResponseModel.data![index].opnameEndDate!)}',
+                                                            style: TextStyle(
+                                                                fontFamily: GoogleFonts
+                                                                        .poppins()
+                                                                    .fontFamily,
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .white)),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.29,
+                                                      child: AutoSizeText(
+                                                          'Total Asset Opname',
+                                                          style: TextStyle(
+                                                              fontFamily: GoogleFonts
+                                                                      .poppins()
+                                                                  .fontFamily,
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                    AutoSizeText(
+                                                        ': ${state.assetOpnameListResponseModel.data![index].totalAsset!}',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                GoogleFonts
+                                                                        .poppins()
+                                                                    .fontFamily,
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.white)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                              color: Color(0xFF3B3B3B),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8))),
+                                          padding: EdgeInsets.all(5),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 40, bottom: 40),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 1.5,
+                                    color: Color(0xFFFF7122),
+                                  ),
+                                );
+                              },
+                              itemCount: state
+                                  .assetOpnameListResponseModel.data!.length,
+                              padding: const EdgeInsets.only(
+                                  top: 60.0, left: 24.0, right: 24.0),
+                              shrinkWrap: true)
+                          : Container();
+                    }
+                    return Container();
+                  })),
         ],
       ),
     );

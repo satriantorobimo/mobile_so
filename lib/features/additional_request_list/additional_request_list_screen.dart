@@ -29,6 +29,7 @@ class _AdditionalRequestListScreenState
   bool sell = false;
   bool disposal = false;
   bool maintanance = false;
+  bool mutation = false;
   String name = '';
   String uid = '';
   String company = '';
@@ -69,6 +70,7 @@ class _AdditionalRequestListScreenState
                   other: false,
                   register: register,
                   sell: sell,
+                  mutation: mutation,
                   assetGrowResponseModel: AssetGrowResponseModel()));
         },
       ),
@@ -93,8 +95,8 @@ class _AdditionalRequestListScreenState
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  height: 65,
-                  width: 65,
+                  height: MediaQuery.of(context).size.width * 0.13,
+                  width: MediaQuery.of(context).size.width * 0.13,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
@@ -116,7 +118,7 @@ class _AdditionalRequestListScreenState
                         style: TextStyle(
                             fontFamily: GoogleFonts.poppins().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: GeneralUtil.fontSize(context) * 0.3,
                             color: Colors.white)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,21 +127,25 @@ class _AdditionalRequestListScreenState
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
                         Text(company,
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.green,
-                              size: 12,
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015,
+                              width: MediaQuery.of(context).size.height * 0.015,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
                             ),
                             const SizedBox(width: 4),
                             Text('Active',
@@ -147,7 +153,8 @@ class _AdditionalRequestListScreenState
                                     fontFamily:
                                         GoogleFonts.poppins().fontFamily,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize:
+                                        GeneralUtil.fontSize(context) * 0.3,
                                     color: Colors.white)),
                           ],
                         )
@@ -174,6 +181,7 @@ class _AdditionalRequestListScreenState
                       sell = false;
                       disposal = false;
                       maintanance = false;
+                      mutation = false;
                     });
                     additionalListBloc.add(const RegisterAttempt());
                   },
@@ -203,6 +211,7 @@ class _AdditionalRequestListScreenState
                       sell = true;
                       disposal = false;
                       maintanance = false;
+                      mutation = false;
                     });
                     additionalListBloc.add(const SellAttempt());
                   },
@@ -231,6 +240,7 @@ class _AdditionalRequestListScreenState
                       sell = false;
                       disposal = true;
                       maintanance = false;
+                      mutation = false;
                     });
                     additionalListBloc.add(const DisposalAttempt());
                   },
@@ -260,6 +270,7 @@ class _AdditionalRequestListScreenState
                       sell = false;
                       disposal = false;
                       maintanance = true;
+                      mutation = false;
                     });
                     additionalListBloc.add(const MaintenanceAttempt());
                   },
@@ -272,7 +283,37 @@ class _AdditionalRequestListScreenState
                             : Colors.transparent,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20))),
-                    child: Text('Maintanance',
+                    child: Text('Maintenance',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: const Color(0xFFC0EDE8))),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      register = false;
+                      sell = false;
+                      disposal = false;
+                      maintanance = false;
+                      mutation = true;
+                    });
+                    additionalListBloc.add(const MutationAttempt());
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: mutation
+                            ? const Color(0xFF2C5A71)
+                            : Colors.transparent,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    child: Text('Mutation',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: GoogleFonts.poppins().fontFamily,
@@ -387,7 +428,7 @@ class _AdditionalRequestListScreenState
             children: [
               Text(title,
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: GeneralUtil.fontSize(context) * 0.45,
                       fontWeight: FontWeight.bold,
                       color: Colors.white)),
               SizedBox(width: 8),
@@ -411,28 +452,35 @@ class _AdditionalRequestListScreenState
               },
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Row(
                   children: [
-                    Icon(Icons.description, size: 40, color: Colors.green),
+                    Icon(Icons.description, size: 30, color: Colors.green),
                     SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Request No :  ${request.requestCode}",
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.white)),
+                              style: TextStyle(
+                                  fontSize: GeneralUtil.fontSize(context) * 0.4,
+                                  color: Colors.white)),
                           Text(
                               "Item Name: ${request.requestType!.toLowerCase() == 'register' ? request.itemName : request.assetName}",
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey)),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.35,
+                                  color: Colors.grey)),
                           Text("Request Type: ${request.requestType}",
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey)),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.35,
+                                  color: Colors.grey)),
                           Text("Request Status: ${request.status}",
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.grey)),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.35,
+                                  color: Colors.grey)),
                         ],
                       ),
                     ),

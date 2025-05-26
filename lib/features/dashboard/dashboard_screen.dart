@@ -5,6 +5,9 @@ import 'package:mobile_so/features/dashboard/bar_chart.dart';
 import 'package:mobile_so/features/dashboard/class_status.dart';
 import 'package:mobile_so/features/dashboard/custom_calendar.dart';
 import 'package:mobile_so/features/dashboard/line_chart.dart';
+import 'package:mobile_so/features/dashboard/news_widget.dart';
+import 'package:mobile_so/features/dashboard/speed_widget.dart';
+import 'package:mobile_so/utility/general_util.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
 import 'package:mobile_so/utility/string_router_util.dart';
 
@@ -18,6 +21,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   bool myDay = true;
   bool calendar = false;
+  bool news = false;
   String name = '';
   String uid = '';
   String company = '';
@@ -149,12 +153,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Status> data = [
-      Status('On Repair', 50),
-      Status('Good', 300),
-      Status('Broken', 10),
-      Status('Others', 5),
-    ];
     return Scaffold(
       backgroundColor: const Color(0xFF130139),
       body: SingleChildScrollView(
@@ -162,15 +160,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.06,
-                  left: 24.0,
-                  right: 24.0),
+                top: MediaQuery.of(context).size.height * 0.06,
+                left: 24.0,
+                right: 24.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: 65,
-                    width: 65,
+                    height: MediaQuery.of(context).size.width * 0.13,
+                    width: MediaQuery.of(context).size.width * 0.13,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey,
@@ -192,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           style: TextStyle(
                               fontFamily: GoogleFonts.poppins().fontFamily,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: GeneralUtil.fontSize(context) * 0.3,
                               color: Colors.white)),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,21 +200,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               style: TextStyle(
                                   fontFamily: GoogleFonts.poppins().fontFamily,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: GeneralUtil.fontSize(context) * 0.3,
                                   color: Colors.white)),
                           Text(company,
                               style: TextStyle(
                                   fontFamily: GoogleFonts.poppins().fontFamily,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: GeneralUtil.fontSize(context) * 0.3,
                                   color: Colors.white)),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Icon(
-                                Icons.check_circle_rounded,
-                                color: Colors.green,
-                                size: 12,
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.015,
+                                width:
+                                    MediaQuery.of(context).size.height * 0.015,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
                               ),
                               const SizedBox(width: 4),
                               Text('Active',
@@ -223,7 +227,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       fontFamily:
                                           GoogleFonts.poppins().fontFamily,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.3,
                                       color: Colors.white)),
                             ],
                           )
@@ -244,6 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       setState(() {
                         myDay = true;
                         calendar = false;
+                        news = false;
                       });
                     },
                     child: Container(
@@ -260,7 +266,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           style: TextStyle(
                               fontFamily: GoogleFonts.poppins().fontFamily,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: GeneralUtil.fontSize(context) * 0.35,
                               color: const Color(0xFFC0EDE8))),
                     ),
                   ),
@@ -270,6 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       setState(() {
                         myDay = false;
                         calendar = true;
+                        news = false;
                       });
                     },
                     child: Container(
@@ -286,7 +293,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           style: TextStyle(
                               fontFamily: GoogleFonts.poppins().fontFamily,
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: GeneralUtil.fontSize(context) * 0.35,
+                              color: const Color(0xFFC0EDE8))),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        myDay = false;
+                        calendar = false;
+                        news = true;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                          color: news
+                              ? const Color(0xFF2C5A71)
+                              : Colors.transparent,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
+                      child: Text('News',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                              fontWeight: FontWeight.bold,
+                              fontSize: GeneralUtil.fontSize(context) * 0.35,
                               color: const Color(0xFFC0EDE8))),
                     ),
                   ),
@@ -295,163 +329,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             Visibility(
               visible: myDay,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 24, left: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Daily\nSummary',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24, left: 24),
+                    child: Text('Daily\nSummary',
                         style: TextStyle(
                             fontFamily: GoogleFonts.nunito().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 32,
+                            fontSize: GeneralUtil.fontSize(context) * 1,
                             color: Colors.white)),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        width: double.infinity,
-                        child: BarsChart(data: data)),
-                    const SizedBox(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              color: const Color(0xFFFFB300),
-                            ),
-                            const SizedBox(width: 4),
-                            Text('On Repair',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                        const SizedBox(width: 8),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              color: const Color(0xFF00BF63),
-                            ),
-                            const SizedBox(width: 4),
-                            Text('Good',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                        const SizedBox(width: 8),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              color: const Color(0xFFD00E00),
-                            ),
-                            const SizedBox(width: 4),
-                            Text('Broken',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                        const SizedBox(width: 8),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              color: const Color(0xFF2F5F98),
-                            ),
-                            const SizedBox(width: 4),
-                            Text('Others',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: const LinesChart(isShowingMainData: true),
-                    ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16, left: 16),
+                    child: SizedBox(width: double.infinity, child: BarsChart()),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: const LinesChart(),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                ],
               ),
             ),
-            Visibility(
-              visible: myDay,
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 4.0, left: 24.0, right: 24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Opname\nSpeed',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.nunito().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 28,
-                                color: const Color(0xFFFF9561))),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text('358',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 55,
-                                    color: const Color(0xFFFF9561))),
-                            const SizedBox(width: 16),
-                            Text('ASSET / DAY',
-                                style: TextStyle(
-                                    fontFamily: GoogleFonts.nunito().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: const Color(0xFFFF9561))),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text('Jaguar',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.squadaOne().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: const Color(0xFFBFBFBF))),
-                        Image.asset(
-                          'assets/imgs/jaguar.png',
-                          width: 85,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
+            Visibility(visible: myDay, child: SpeedWidget()),
             // Visibility(
             //   visible: calendar,
             //   child: Padding(
@@ -504,6 +407,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // ),
 
             Visibility(visible: calendar, child: CustomCalendar()),
+            Visibility(visible: news, child: NewsWidget()),
           ],
         ),
       ),

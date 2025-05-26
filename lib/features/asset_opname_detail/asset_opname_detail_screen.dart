@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_so/features/asset_opname_detail/bloc/print/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail/bloc/reserved/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail/content_data_widget.dart';
 import 'package:mobile_so/features/asset_opname_detail/data/arguments_asset_grow.dart';
@@ -28,6 +29,7 @@ class AssetOpnameDetailScreen extends StatefulWidget {
 class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
   List<DataContent> dataContent = [];
   ReservedBloc reservedBloc = ReservedBloc(assetGrowRepo: AssetGrowRepo());
+  PrintBloc printBloc = PrintBloc(assetGrowRepo: AssetGrowRepo());
   bool isLoading = false;
   double rating = 0.0;
   bool isFromReserve = false;
@@ -1346,30 +1348,16 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                     .propertyFacility ??
                 []));
         dataContent.add(DataContent(
-            'Colour',
-            widget
-                .argumentsAssetGrow.assetGrowResponseModel.data![0].colourName!,
+            'Asset Specification',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                    .assetSpecification ??
+                '-',
             false,
             false,
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
                     .propertyFacility ??
                 []));
-        dataContent.add(DataContent(
-            'Serial No.',
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0].serialNo!,
-            false,
-            false,
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
-                    .propertyFacility ??
-                []));
-        dataContent.add(DataContent(
-            'IMEI',
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0].imei!,
-            false,
-            false,
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
-                    .propertyFacility ??
-                []));
+
         dataContent.add(DataContent(
             'Insured',
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
@@ -1378,6 +1366,15 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                 ? widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
                     .isInsured!
                 : '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].isInsured!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].numberOfCoverage!} year',
+            false,
+            false,
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                    .propertyFacility ??
+                []));
+        dataContent.add(DataContent(
+            'Coverage Type',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                .coverageType!,
             false,
             false,
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
@@ -1422,6 +1419,22 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
         dataContent.add(DataContent(
             'Maintenance Routine',
             '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].maintenanceStartDate!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].maintenanceEndDate!}',
+            false,
+            false,
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                    .propertyFacility ??
+                []));
+        dataContent.add(DataContent(
+            'Depreciation Commercial',
+            '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryCommName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryCommName!}',
+            false,
+            false,
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                    .propertyFacility ??
+                []));
+        dataContent.add(DataContent(
+            'Depreciation Commercial',
+            '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryFiscalName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryFiscalName!}',
             false,
             false,
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
@@ -1488,14 +1501,7 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
                     .propertyFacility ??
                 []));
-        dataContent.add(DataContent(
-            'Depreciation',
-            '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].isDepre!} -  ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].methodTypeComm!}',
-            false,
-            false,
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
-                    .propertyFacility ??
-                []));
+
         dataContent.add(DataContent(
             'Asset Location',
             '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].regionName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].areaName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].branchName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].locationName!}',
@@ -1532,10 +1538,10 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                 ),
               ),
               const SizedBox(width: 16),
-              AutoSizeText('Asset Opname',
+              Text('Asset Opname',
                   style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      fontSize: 20,
+                      fontSize: GeneralUtil.fontSize(context) * 0.65,
                       color: Colors.white)),
             ],
           ),
@@ -1554,6 +1560,18 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        widget.argumentsAssetGrow.assetGrowResponseModel
+                            .data![0].itemName!,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: GeneralUtil.fontSize(context) * 0.4,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1561,18 +1579,6 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Column(
                               children: [
-                                AutoSizeText(
-                                  widget
-                                      .argumentsAssetGrow
-                                      .assetGrowResponseModel
-                                      .data![0]
-                                      .itemName!,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
                                 Image.asset(
                                     widget.argumentsAssetGrow.assetGrowResponseModel.data![0].status!
                                                 .toLowerCase() ==
@@ -1639,9 +1645,6 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  height: 32,
-                                ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1661,18 +1664,103 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                             ),
                                           )),
                                     ),
-                                    const Icon(
-                                      Icons.print_sharp,
-                                      size: 33,
-                                      color: Colors.white,
-                                    ),
+                                    BlocListener(
+                                        bloc: printBloc,
+                                        listener: (_, PrintState state) {
+                                          if (state is PrintLoading) {}
+                                          if (state is PrintLoaded) {
+                                            GeneralUtil().showSnackBarSuccess(
+                                                context,
+                                                'Request print successfully');
+                                          }
+                                          if (state is PrintError) {
+                                            GeneralUtil().showSnackBarError(
+                                                context, state.error!);
+                                          }
+                                          if (state is PrintException) {
+                                            if (state.error.toLowerCase() ==
+                                                'unauthorized access') {
+                                              GeneralUtil().showSnackBarError(
+                                                  context, 'Session Expired');
+                                              var bottomBarProvider =
+                                                  Provider.of<NavbarProvider>(
+                                                      context,
+                                                      listen: false);
+                                              bottomBarProvider.setPage(0);
+                                              bottomBarProvider.setTab(0);
+                                              SharedPrefUtil.clearSharedPref();
+                                              Future.delayed(
+                                                  const Duration(seconds: 1),
+                                                  () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        StringRouterUtil
+                                                            .loginScreenRoute,
+                                                        (route) => false);
+                                              });
+                                            } else {
+                                              GeneralUtil().showSnackBarError(
+                                                  context, state.error);
+                                            }
+                                          }
+                                        },
+                                        child: BlocBuilder(
+                                            bloc: printBloc,
+                                            builder:
+                                                (context, PrintState state) {
+                                              if (state is PrintLoading) {
+                                                return const Center(
+                                                  child: SizedBox(
+                                                    width: 25,
+                                                    height: 25,
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                                );
+                                              }
+                                              if (state is PrintLoaded) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    printBloc.add(PrintAttempt(
+                                                        assetCode: widget
+                                                            .argumentsAssetGrow
+                                                            .assetGrowResponseModel
+                                                            .data![0]
+                                                            .code!));
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.print_sharp,
+                                                    size: 33,
+                                                    color: Colors.white,
+                                                  ),
+                                                );
+                                              }
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  printBloc.add(PrintAttempt(
+                                                      assetCode: widget
+                                                          .argumentsAssetGrow
+                                                          .assetGrowResponseModel
+                                                          .data![0]
+                                                          .code!));
+                                                },
+                                                child: const Icon(
+                                                  Icons.print_sharp,
+                                                  size: 33,
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            })),
                                   ],
                                 ),
-                                AutoSizeText(
+                                Text(
                                   widget.argumentsAssetGrow
                                       .assetGrowResponseModel.data![0].barcode!,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: Colors.white),
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.4,
+                                      color: Colors.white),
                                 ),
                               ],
                             ),
@@ -1685,75 +1773,40 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AutoSizeText(
+                            Text(
                               'Asset No : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].code!}',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            AutoSizeText(
+                            Text(
                               'Usefull life : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].usefull!} Years',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            AutoSizeText(
+                            Text(
                               'Branch Location : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].regionName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].areaName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].branchName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].locationName!}',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const AutoSizeText(
-                                  'PIC :',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(
-                                      ' ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picCode!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picName!}',
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                    AutoSizeText(
-                                      ' ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picPositionName!}',
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                  ],
-                                )
-                              ],
+                            Text(
+                              'PIC : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picCode!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].picPositionName!}',
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const AutoSizeText(
-                                  'User :',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.36,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AutoSizeText(
-                                        ' ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userCode!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                      AutoSizeText(
-                                        ' ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userPositionName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                            Text(
+                              'User : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userCode!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userPositionName!}',
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             )
                           ],
                         ),
@@ -1786,10 +1839,13 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
+                                    Text(
                                       dataContent[index].title,
-                                      style: const TextStyle(
-                                          fontSize: 18, color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize:
+                                              GeneralUtil.fontSize(context) *
+                                                  0.6,
+                                          color: Colors.white),
                                     ),
                                     const SizedBox(
                                       height: 8,
@@ -1797,10 +1853,12 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                     ListView.separated(
                                         shrinkWrap: true,
                                         itemBuilder: ((context, indexes) {
-                                          return AutoSizeText(
+                                          return Text(
                                             '${dataContent[index].propertyFacility[indexes].no!}. ${dataContent[index].propertyFacility[indexes].propertyFacilityName!}',
-                                            style: const TextStyle(
-                                                fontSize: 16,
+                                            style: TextStyle(
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.5,
                                                 color: Color(0xFFbfbfbf)),
                                           );
                                         }),
@@ -1826,10 +1884,13 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
+                                    Text(
                                       dataContent[index].title,
-                                      style: const TextStyle(
-                                          fontSize: 18, color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize:
+                                              GeneralUtil.fontSize(context) *
+                                                  0.6,
+                                          color: Colors.white),
                                     ),
                                     const SizedBox(
                                       height: 8,
@@ -1847,10 +1908,12 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                                   color: Color(0xFFE6E7E8)),
                                             ),
                                           ),
-                                          child: AutoSizeText(
+                                          child: Text(
                                             dataContent[index].value,
-                                            style: const TextStyle(
-                                                fontSize: 16,
+                                            style: TextStyle(
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.5,
                                                 color: Color(0xFFbfbfbf)),
                                           ),
                                         ),
@@ -1870,7 +1933,12 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                                       .argumentsAssetGrow
                                                       .assetGrowResponseModel
                                                       .data![0]
-                                                      .longitude!));
+                                                      .longitude!),
+                                                  widget
+                                                      .argumentsAssetGrow
+                                                      .assetGrowResponseModel
+                                                      .data![0]
+                                                      .locationName!);
                                             },
                                             child: Image.asset(
                                               'assets/imgs/map.png',
@@ -2027,10 +2095,13 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                                 CrossAxisAlignment.center,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
-                                              AutoSizeText('RESERVED',
+                                            children: [
+                                              Text('RESERVED',
                                                   style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize:
+                                                          GeneralUtil.fontSize(
+                                                                  context) *
+                                                              0.6,
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.w600)),
@@ -2085,10 +2156,11 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              AutoSizeText('OPNAME',
+                            children: [
+                              Text('OPNAME',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.6,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                               SizedBox(width: 4),

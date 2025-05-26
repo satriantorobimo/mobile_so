@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobile_so/features/daily_detail/data/argument_daily_detail_model.dart';
 import 'package:mobile_so/features/dashboard/bloc/calendar_bloc/bloc.dart';
 import 'package:mobile_so/features/dashboard/data/calendar_list_response_model.dart';
 import 'package:mobile_so/features/dashboard/domain/repo/dashboard_repo.dart';
+import 'package:mobile_so/features/dashboard_detail/data/argument_dashboard_detail_model.dart';
 import 'package:mobile_so/features/navbar/navbar_provider.dart';
 import 'package:mobile_so/utility/general_util.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
@@ -32,7 +34,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
 
   @override
   void initState() {
-    calendarBloc.add(CalendarListAttempt(month: 1, year: 2025));
+    calendarBloc.add(CalendarListAttempt(
+        month: GeneralUtil.dateConvertMonth(DateTime.now().toString()),
+        year: GeneralUtil.dateConvertYear(DateTime.now().toString())));
     super.initState();
   }
 
@@ -50,10 +54,14 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     : GeneralUtil.dateConvertCalendar(_focusedDay.toString());
                 setState(() {
                   resultsTemp.addAll(state.calendarListResponseModel.results!);
-                  results = resultsTemp
-                      .where((item) =>
-                          GeneralUtil.dateConvert(item.date!).contains(timeNow))
-                      .toList();
+
+                  if (_focusedDay.month.toString() ==
+                      GeneralUtil.dateConvertMonth(DateTime.now().toString())) {
+                    results = resultsTemp
+                        .where((item) => GeneralUtil.dateConvert(item.date!)
+                            .contains(timeNow))
+                        .toList();
+                  }
                 });
               }
               if (state is CalendarError) {
@@ -127,7 +135,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                           });
 
                           calendarBloc.add(CalendarListAttempt(
-                              month: focusedDay.month, year: focusedDay.year));
+                              month: focusedDay.month.toString(),
+                              year: focusedDay.year.toString()));
                         },
                         calendarStyle: CalendarStyle(
                           cellMargin: EdgeInsets.zero,
@@ -148,7 +157,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                           titleTextStyle: TextStyle(
                             color: Colors.white, // Title text color
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                            fontSize: GeneralUtil.fontSize(context) * 0.45,
                           ),
                           leftChevronIcon: Icon(
                             Icons.chevron_left,
@@ -322,9 +331,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
                 child: ListView.separated(
                   itemBuilder: (context, index) {
                     return Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                           color: Color(0xFF122E69),
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                          borderRadius: BorderRadius.all(Radius.circular(
+                            MediaQuery.of(context).size.width * 0.035,
+                          ))),
                       width: double.infinity,
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -334,7 +345,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                             children: [
                               Icon(
                                 Icons.circle,
-                                size: 45,
+                                size: MediaQuery.of(context).size.width * 0.1,
                                 color: results[0].data![index].status == 'CLOSE'
                                     ? Colors.red
                                     : results[0].data![index].status == 'CANCEL'
@@ -355,20 +366,24 @@ class _CustomCalendarState extends State<CustomCalendar> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.27,
-                                        child: AutoSizeText('Opname No',
+                                        child: Text('Opname No',
                                             style: TextStyle(
                                                 fontFamily:
                                                     GoogleFonts.poppins()
                                                         .fontFamily,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 12,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.3,
                                                 color: Colors.white)),
                                       ),
                                       Text(': ${results[0].data![index].code}',
                                           style: TextStyle(
                                               fontFamily: GoogleFonts.poppins()
                                                   .fontFamily,
-                                              fontSize: 12,
+                                              fontSize: GeneralUtil.fontSize(
+                                                      context) *
+                                                  0.3,
                                               color: Colors.white)),
                                     ],
                                   ),
@@ -385,14 +400,19 @@ class _CustomCalendarState extends State<CustomCalendar> {
                                                 fontFamily:
                                                     GoogleFonts.poppins()
                                                         .fontFamily,
-                                                fontSize: 12,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.3,
                                                 color: Colors.white)),
                                       ),
-                                      Text(': 12 to 26 May 2024',
+                                      Text(
+                                          ': ${GeneralUtil.dateConvertList(results[0].data![index].opnameStartDate!)} to\n  ${GeneralUtil.dateConvertList(results[0].data![index].opnameEndDate!)}',
                                           style: TextStyle(
                                               fontFamily: GoogleFonts.poppins()
                                                   .fontFamily,
-                                              fontSize: 12,
+                                              fontSize: GeneralUtil.fontSize(
+                                                      context) *
+                                                  0.3,
                                               color: Colors.white)),
                                     ],
                                   ),
@@ -409,7 +429,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
                                                 fontFamily:
                                                     GoogleFonts.poppins()
                                                         .fontFamily,
-                                                fontSize: 12,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.3,
                                                 color: Colors.white)),
                                       ),
                                       Text(
@@ -417,7 +439,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
                                           style: TextStyle(
                                               fontFamily: GoogleFonts.poppins()
                                                   .fontFamily,
-                                              fontSize: 12,
+                                              fontSize: GeneralUtil.fontSize(
+                                                      context) *
+                                                  0.3,
                                               color: Colors.white)),
                                     ],
                                   ),
@@ -427,41 +451,66 @@ class _CustomCalendarState extends State<CustomCalendar> {
                           ),
                           Column(
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context,
                                       StringRouterUtil
-                                          .dashboardDetailScreenRoute);
+                                          .dashboardDetailScreenRoute,
+                                      arguments: ArgumentDashboardDetailModel(
+                                          date: GeneralUtil.dateConvert(
+                                              results[0].date!),
+                                          code: results[0].data![index].code!,
+                                          dateStart: results[0]
+                                              .data![index]
+                                              .opnameStartDate!,
+                                          dateEnd: results[0]
+                                              .data![index]
+                                              .opnameEndDate!));
                                 },
                                 child: Container(
                                   decoration: const BoxDecoration(
                                       color: Color(0xFFE45A04),
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(8))),
+                                          BorderRadius.all(Radius.circular(6))),
                                   padding: EdgeInsets.all(5),
                                   child: Center(
                                     child: Icon(
                                       Icons.arrow_forward_ios_rounded,
                                       color: Colors.white,
-                                      size: 16,
+                                      size: MediaQuery.of(context).size.width *
+                                          0.03,
                                     ),
                                   ),
                                 ),
                               ),
                               SizedBox(height: 6),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context,
-                                      StringRouterUtil.dailyDetailScreenRoute);
-                                },
-                                child: SvgPicture.asset(
-                                  'assets/icons/dashboard.svg',
-                                  color: Colors.white,
-                                  height: 28,
-                                  width: 28,
-                                ),
-                              ),
+                              results[0].data![index].totalAssetDone == 0
+                                  ? Container()
+                                  : InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context,
+                                            StringRouterUtil
+                                                .dailyDetailScreenRoute,
+                                            arguments: ArgumentDailyDetailModel(
+                                                code: results[0]
+                                                    .data![index]
+                                                    .code!,
+                                                date: GeneralUtil.dateConvert(
+                                                    results[0].date!)));
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/icons/dashboard.svg',
+                                        color: Colors.white,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.06,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.06,
+                                      ),
+                                    ),
                             ],
                           )
                         ],
@@ -474,7 +523,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   itemCount: results[0].data!.length,
                   shrinkWrap: true,
                   padding: EdgeInsets.only(
-                      left: 24.0, right: 24.0, top: 24, bottom: 150.0),
+                      left: 16.0, right: 16.0, top: 24, bottom: 150.0),
                 ),
               )
       ],

@@ -105,7 +105,7 @@ class _AdditionalRequestScreenState extends State<AdditionalRequestScreen> {
                           _assetCodeCtrl.text, 'BARCODE')));
                 },
                 decoration: InputDecoration(
-                  hintText: 'Asset Code   -   Asset Name',
+                  hintText: 'Please input your barcode here',
                   hintStyle: TextStyle(
                     color: const Color(0xFFBFBFBF).withOpacity(0.5),
                     fontFamily: GoogleFonts.poppins().fontFamily,
@@ -163,6 +163,7 @@ class _AdditionalRequestScreenState extends State<AdditionalRequestScreen> {
                                         widget.argumentAddReq.maintenance,
                                     other: widget.argumentAddReq.other,
                                     sell: widget.argumentAddReq.sell,
+                                    mutation: widget.argumentAddReq.mutation,
                                     assetGrowResponseModel:
                                         state.assetGrowResponseModel));
                           }
@@ -182,6 +183,7 @@ class _AdditionalRequestScreenState extends State<AdditionalRequestScreen> {
                                   arguments: ArgumentAddReq(
                                       register: true,
                                       disposal: widget.argumentAddReq.disposal,
+                                      mutation: widget.argumentAddReq.mutation,
                                       maintenance:
                                           widget.argumentAddReq.maintenance,
                                       other: widget.argumentAddReq.other,
@@ -204,6 +206,7 @@ class _AdditionalRequestScreenState extends State<AdditionalRequestScreen> {
                                   arguments: ArgumentAddReq(
                                       register: true,
                                       disposal: widget.argumentAddReq.disposal,
+                                      mutation: widget.argumentAddReq.mutation,
                                       maintenance:
                                           widget.argumentAddReq.maintenance,
                                       other: widget.argumentAddReq.other,

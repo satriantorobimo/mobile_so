@@ -23,6 +23,26 @@ class UploadDocDisposalAttempt extends UploadDocReqEvent {
   List<Object> get props => [uploadDocRequestModel, opnameCode];
 }
 
+class UploadDocMutaionAttempt extends UploadDocReqEvent {
+  const UploadDocMutaionAttempt(
+      {required this.uploadDocRequestModel, required this.opnameCode});
+  final UploadDocRequestModel uploadDocRequestModel;
+  final String opnameCode;
+
+  @override
+  List<Object> get props => [uploadDocRequestModel, opnameCode];
+}
+
+class UploadDocMaintenanceAttempt extends UploadDocReqEvent {
+  const UploadDocMaintenanceAttempt(
+      {required this.uploadDocRequestModel, required this.opnameCode});
+  final UploadDocRequestModel uploadDocRequestModel;
+  final String opnameCode;
+
+  @override
+  List<Object> get props => [uploadDocRequestModel, opnameCode];
+}
+
 class UploadDocSellAttempt extends UploadDocReqEvent {
   const UploadDocSellAttempt(
       {required this.uploadDocRequestModel, required this.opnameCode});

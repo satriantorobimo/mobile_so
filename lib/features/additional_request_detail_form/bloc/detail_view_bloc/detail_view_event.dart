@@ -36,3 +36,20 @@ class DetailViewMaintenanceAttempt extends DetailViewEvent {
   @override
   List<Object> get props => [pCode];
 }
+
+class DetailViewMutationAttempt extends DetailViewEvent {
+  const DetailViewMutationAttempt({required this.pCode});
+  final String pCode;
+
+  @override
+  List<Object> get props => [pCode];
+}
+
+class DocPreviewAttempt extends DetailViewEvent {
+  const DocPreviewAttempt({required this.pFileName, required this.pFilePaths});
+  final String pFileName;
+  final String pFilePaths;
+
+  @override
+  List<Object> get props => [pFileName, pFilePaths];
+}

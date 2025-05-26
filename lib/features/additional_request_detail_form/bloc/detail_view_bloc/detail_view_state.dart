@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_disposal_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_maintenance_response_model.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_mutation_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_register_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_sell_response_model.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/doc_preview_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_item_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_model.dart';
 
@@ -55,6 +57,24 @@ class DetailViewMaintenanceLoaded extends DetailViewState {
 
   @override
   List<Object> get props => [additionalRequestDetailMaintenanceResponseModel];
+}
+
+class DetailViewMutationLoaded extends DetailViewState {
+  const DetailViewMutationLoaded(
+      {required this.additionalRequestDetailMutationResponseModel});
+  final AdditionalRequestDetailMutationResponseModel
+      additionalRequestDetailMutationResponseModel;
+
+  @override
+  List<Object> get props => [additionalRequestDetailMutationResponseModel];
+}
+
+class DocPreviewLoaded extends DetailViewState {
+  const DocPreviewLoaded({required this.docPreviewResponseModel});
+  final DocPreviewResponseModel docPreviewResponseModel;
+
+  @override
+  List<Object> get props => [docPreviewResponseModel];
 }
 
 class DetailViewError extends DetailViewState {

@@ -62,6 +62,44 @@ class UploadDocReqBloc extends Bloc<UploadDocReqEvent, UploadDocReqState> {
           emit(UploadDocReqException(e.toString()));
         }
       }
+
+      if (event is UploadDocMutaionAttempt) {
+        try {
+          emit(UploadDocReqLoading());
+          final generalResponseModel =
+              await submitAddReqRepo.attemptUploadMutation(
+                  event.uploadDocRequestModel, event.opnameCode);
+          if (generalResponseModel!.result == 1) {
+            emit(
+                UploadDocReqLoaded(generalResponseModel: generalResponseModel));
+          } else if (generalResponseModel.result == 0) {
+            emit(UploadDocReqError(generalResponseModel.message));
+          } else {
+            emit(const UploadDocReqException('error'));
+          }
+        } catch (e) {
+          emit(UploadDocReqException(e.toString()));
+        }
+      }
+
+      if (event is UploadDocMaintenanceAttempt) {
+        try {
+          emit(UploadDocReqLoading());
+          final generalResponseModel =
+              await submitAddReqRepo.attemptUploadMaintenance(
+                  event.uploadDocRequestModel, event.opnameCode);
+          if (generalResponseModel!.result == 1) {
+            emit(
+                UploadDocReqLoaded(generalResponseModel: generalResponseModel));
+          } else if (generalResponseModel.result == 0) {
+            emit(UploadDocReqError(generalResponseModel.message));
+          } else {
+            emit(const UploadDocReqException('error'));
+          }
+        } catch (e) {
+          emit(UploadDocReqException(e.toString()));
+        }
+      }
     });
   }
 }

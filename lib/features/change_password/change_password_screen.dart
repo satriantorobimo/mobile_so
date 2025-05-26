@@ -40,7 +40,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48.0),
+            padding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.height * 0.07),
             child: Column(
               children: [
                 Padding(
@@ -61,12 +62,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       Text('StockOpname .',
                           style: TextStyle(
                               fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontSize: 29,
+                              fontSize: GeneralUtil.fontSize(context) * 0.6,
                               color: Colors.white)),
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 48.0),
                   child: Align(
@@ -75,27 +76,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       child: Text('Change\nPassword',
                           style: TextStyle(
                               fontFamily: GoogleFonts.nunito().fontFamily,
-                              fontSize: 40,
+                              fontSize: GeneralUtil.fontSize(context) * 0.85,
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 48),
                   child: Column(
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'PASSWORD : ',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          'NEW PASSWORD',
+                          style: TextStyle(
+                              fontSize: GeneralUtil.fontSize(context) * 0.4,
+                              color: Colors.white),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015),
                       Stack(
                         children: [
                           Material(
@@ -126,7 +128,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               }),
                               decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: const EdgeInsets.all(24),
+                                  contentPadding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.height *
+                                          0.035),
                                   filled: true,
                                   fillColor: const Color(0xFFB1ADBC),
                                   enabledBorder: OutlineInputBorder(
@@ -177,19 +181,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           )
                         ],
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      const Align(
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015),
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'CONFIRM PASSWORD :',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: GeneralUtil.fontSize(context) * 0.4,
+                              color: Colors.white),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.015),
                       Stack(
                         children: [
                           Material(
@@ -217,7 +221,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               }),
                               decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: const EdgeInsets.all(24),
+                                  contentPadding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.height *
+                                          0.035),
                                   hintStyle: TextStyle(
                                       color: Colors.grey.withOpacity(0.5)),
                                   filled: true,
@@ -273,7 +279,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Padding(
                   padding: const EdgeInsets.only(left: 40.0),
                   child: Column(
@@ -283,7 +289,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         child: Text('Your password must :',
                             style: TextStyle(
                                 fontFamily: GoogleFonts.raleway().fontFamily,
-                                fontSize: 14,
+                                fontSize: GeneralUtil.fontSize(context) * 0.4,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white)),
                       ),
@@ -293,7 +299,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         child: Text('  1. Be at least 8 characters',
                             style: TextStyle(
                                 fontFamily: GoogleFonts.raleway().fontFamily,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white)),
                       ),
@@ -304,7 +310,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             '  2. Include at least one uppercase letter',
                             style: TextStyle(
                                 fontFamily: GoogleFonts.raleway().fontFamily,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white)),
                       ),
@@ -314,7 +320,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         child: Text('  3. Include at least one number',
                             style: TextStyle(
                                 fontFamily: GoogleFonts.raleway().fontFamily,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white)),
                       ),
@@ -324,14 +330,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         child: Text('  4. Include at least one symbol',
                             style: TextStyle(
                                 fontFamily: GoogleFonts.raleway().fontFamily,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white)),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                 BlocListener(
                     bloc: changePasswordBloc,
                     listener: (_, ChangePasswordState state) {
@@ -399,7 +405,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.6,
-                                    height: 66,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
                                     decoration: BoxDecoration(
                                       color: isCorrect && isSame
                                           ? const Color(0xFFE45A04)
@@ -411,14 +418,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Text('Confirm',
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.5,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600)),
-                                        SizedBox(width: 4),
-                                        Icon(
+                                        const SizedBox(width: 4),
+                                        const Icon(
                                           Icons.arrow_forward_ios_rounded,
                                           color: Colors.white,
                                           size: 20,

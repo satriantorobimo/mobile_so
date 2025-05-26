@@ -12,6 +12,7 @@ import 'package:mobile_so/features/additional_request_detail_form/data/upload_do
 import 'package:mobile_so/features/asset_opname_detail/data/asset_grow_response_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/submit_opname_bloc/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/upload_doc_opname_bloc/bloc.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/data/ddl_request_screen.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/submit_opname_request_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/domain/repo/opname_submit_repo.dart';
 import 'package:mobile_so/features/navbar/navbar_provider.dart';
@@ -253,7 +254,8 @@ class _AssetOpnameDetailFormScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.17,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.135,
                                 child: Text(
                                   'Location : ',
                                   style: TextStyle(
@@ -262,20 +264,10 @@ class _AssetOpnameDetailFormScreenState
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.data.branchName!,
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                    Text(
-                                      widget.data.locationName!,
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                  ],
+                                child: Text(
+                                  '${widget.data.branchName!} - ${widget.data.locationName!}',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.white),
                                 ),
                               ),
                             ],
@@ -284,7 +276,7 @@ class _AssetOpnameDetailFormScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: MediaQuery.of(context).size.width * 0.08,
                                 child: Text(
                                   'PIC : ',
                                   style: TextStyle(
@@ -310,8 +302,10 @@ class _AssetOpnameDetailFormScreenState
                     bottom: 0,
                     child: GestureDetector(
                       onTap: () {
-                        MapUtil.openMap(double.parse(widget.data.latitude!),
-                            double.parse(widget.data.longitude!));
+                        MapUtil.openMap(
+                            double.parse(widget.data.latitude!),
+                            double.parse(widget.data.longitude!),
+                            widget.data.locationName!);
                       },
                       child: Image.asset(
                         'assets/imgs/map.png',
@@ -351,7 +345,8 @@ class _AssetOpnameDetailFormScreenState
                 onTap: () async {
                   final result = await Navigator.pushNamed(
                       context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: 'location');
+                      arguments:
+                          DdlRequestScreen(title: 'location', source: ''));
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
                       selectedLocation = result['value']!;
@@ -417,7 +412,8 @@ class _AssetOpnameDetailFormScreenState
                 onTap: () async {
                   final result = await Navigator.pushNamed(
                       context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: 'condition');
+                      arguments:
+                          DdlRequestScreen(title: 'condition', source: ''));
 
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
@@ -484,7 +480,7 @@ class _AssetOpnameDetailFormScreenState
                 onTap: () async {
                   final result = await Navigator.pushNamed(
                       context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: 'status');
+                      arguments: DdlRequestScreen(title: 'status', source: ''));
 
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
@@ -551,7 +547,7 @@ class _AssetOpnameDetailFormScreenState
                 onTap: () async {
                   final result = await Navigator.pushNamed(
                       context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: 'pic');
+                      arguments: DdlRequestScreen(title: 'pic', source: ''));
 
                   if (result != null && result is Map<String, dynamic>) {
                     setState(() {
@@ -656,14 +652,20 @@ class _AssetOpnameDetailFormScreenState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    Row(
                       children: [
                         Text(
                           'Longitude  : ${widget.data.longitude}',
                           style:
                               TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          '||',
+                          style:
+                              TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
+                        ),
+                        const SizedBox(width: 4),
                         Text(
                           'Latitude     : ${widget.data.latitude}',
                           style:
@@ -673,8 +675,10 @@ class _AssetOpnameDetailFormScreenState
                     ),
                     GestureDetector(
                       onTap: () {
-                        MapUtil.openMap(double.parse(widget.data.latitude!),
-                            double.parse(widget.data.longitude!));
+                        MapUtil.openMap(
+                            double.parse(widget.data.latitude!),
+                            double.parse(widget.data.longitude!),
+                            widget.data.locationName!);
                       },
                       child: Image.asset(
                         'assets/imgs/map.png',

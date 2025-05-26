@@ -104,7 +104,7 @@ class _AssetOpnameScreenState extends State<AssetOpnameScreen> {
                           _assetCodeCtrl.text, 'BARCODE')));
                 },
                 decoration: InputDecoration(
-                  hintText: 'Asset Code   -   Asset Name',
+                  hintText: 'Please input your barcode here',
                   hintStyle: TextStyle(
                     color: const Color(0xFFBFBFBF).withOpacity(0.5),
                     fontFamily: GoogleFonts.poppins().fontFamily,
@@ -137,13 +137,12 @@ class _AssetOpnameScreenState extends State<AssetOpnameScreen> {
                                 if (val != 'null') {
                                   _assetCodeCtrl.text = val.toString();
                                   assetGrowBloc.add(AssetGrowAttempt(
-                                      assetGrowRequestModel: AssetGrowRequestModel(
-                                          _assetCodeCtrl.text, 'BARCODE')));
+                                      assetGrowRequestModel:
+                                          AssetGrowRequestModel(
+                                              _assetCodeCtrl.text, 'BARCODE')));
                                 }
                               });
-
                             });
-
                           },
                     child: BlocListener(
                         bloc: assetGrowBloc,

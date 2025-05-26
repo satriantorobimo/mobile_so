@@ -93,6 +93,45 @@ class DetailViewBloc extends Bloc<DetailViewEvent, DetailViewState> {
           emit(DetailViewException(e.toString()));
         }
       }
+
+      if (event is DetailViewMutationAttempt) {
+        try {
+          emit(DetailViewLoading());
+          final additionalRequestDetailMutationResponseModel =
+              await additionalRequestDetailRepo
+                  .attemptMutationDetail(event.pCode);
+          if (additionalRequestDetailMutationResponseModel!.result == 1) {
+            emit(DetailViewMutationLoaded(
+                additionalRequestDetailMutationResponseModel:
+                    additionalRequestDetailMutationResponseModel));
+          } else if (additionalRequestDetailMutationResponseModel.result == 0) {
+            emit(DetailViewError(
+                additionalRequestDetailMutationResponseModel.message));
+          } else {
+            emit(const DetailViewException('error'));
+          }
+        } catch (e) {
+          emit(DetailViewException(e.toString()));
+        }
+      }
+
+      if (event is DocPreviewAttempt) {
+        try {
+          emit(DetailViewLoading());
+          final docPreviewResponseModel = await additionalRequestDetailRepo
+              .attemptDocPreview(event.pFileName, event.pFilePaths);
+          if (docPreviewResponseModel!.statusCode == 200) {
+            emit(DocPreviewLoaded(
+                docPreviewResponseModel: docPreviewResponseModel));
+          } else if (docPreviewResponseModel.statusCode != 200) {
+            emit(DetailViewError(docPreviewResponseModel.message));
+          } else {
+            emit(const DetailViewException('error'));
+          }
+        } catch (e) {
+          emit(DetailViewException(e.toString()));
+        }
+      }
     });
   }
 }

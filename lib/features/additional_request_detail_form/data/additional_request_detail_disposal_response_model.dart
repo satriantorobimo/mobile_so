@@ -46,9 +46,9 @@ class Data {
   String? requestorName;
   String? reasonTypeCode;
   String? reasonTypeName;
-  int? purchasePrice;
-  int? totalDepreComm;
-  int? netBookValueComm;
+  var purchasePrice;
+  var totalDepreComm;
+  var netBookValueComm;
   String? lastAssetStatus;
   String? reffCode;
   String? accessTypeCode;
@@ -56,7 +56,7 @@ class Data {
   String? isGrouping;
   String? remarks;
   String? remarks1;
-  int? rowcount;
+  var rowcount;
   List<Document>? document;
 
   Data(

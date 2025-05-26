@@ -36,3 +36,11 @@ class SubmitAdditionalMaintenanceAttempt extends SubmitAddReqEvent {
   @override
   List<Object> get props => [submitRequestModel];
 }
+
+class SubmitAdditionalMutationAttempt extends SubmitAddReqEvent {
+  const SubmitAdditionalMutationAttempt({required this.submitRequestModel});
+  final SubmitRequestModel submitRequestModel;
+
+  @override
+  List<Object> get props => [submitRequestModel];
+}

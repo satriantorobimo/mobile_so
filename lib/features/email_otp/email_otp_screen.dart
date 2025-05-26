@@ -37,21 +37,22 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 80.0),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.1),
                 child: Column(
                   children: [
-                    Text('StockOpname .',
+                    Text('StockOpname.',
                         style: TextStyle(
                             fontFamily: GoogleFonts.leagueSpartan().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 45,
+                            fontSize: GeneralUtil.fontSize(context) * 1.2,
                             color: Colors.white)),
-                    const SizedBox(height: 16),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                     Text(
                       'M o b i l e',
                       style: TextStyle(
                           fontFamily: GoogleFonts.quicksand().fontFamily,
-                          fontSize: 13,
+                          fontSize: GeneralUtil.fontSize(context) * 0.4,
                           color: Colors.white),
                     )
                   ],
@@ -61,16 +62,17 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: Column(
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'USERNAME',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: GeneralUtil.fontSize(context) * 0.4,
+                            color: Colors.white),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015),
                     Material(
                       elevation: 6,
                       shadowColor: Colors.grey.withOpacity(0.4),
@@ -79,9 +81,9 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                           side: const BorderSide(
                               width: 1.0, color: Color(0xFFB1ADBC))),
                       child: TextFormField(
-                        controller: _usernameCtrl,
                         style: const TextStyle(color: Colors.black),
                         keyboardType: TextInputType.text,
+                        controller: _usernameCtrl,
                         onChanged: (data) {
                           if (_usernameCtrl.text.isEmpty) {
                             enable = false;
@@ -92,7 +94,8 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                         },
                         decoration: InputDecoration(
                             isDense: true,
-                            contentPadding: const EdgeInsets.all(24),
+                            contentPadding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height * 0.035),
                             filled: true,
                             fillColor: const Color(0xFFB1ADBC),
                             border: OutlineInputBorder(
@@ -101,12 +104,7 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                             )),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     BlocListener(
                         bloc: changePasswordBloc,
                         listener: (_, ReqChangePasswordState state) {
@@ -179,7 +177,9 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                                           : null,
                                       child: Container(
                                         width: double.infinity,
-                                        height: 66,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: BoxDecoration(
                                             color: Colors.transparent,
                                             borderRadius:
@@ -195,7 +195,10 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                                                     fontFamily:
                                                         GoogleFonts.poppins()
                                                             .fontFamily,
-                                                    fontSize: 16,
+                                                    fontSize:
+                                                        GeneralUtil.fontSize(
+                                                                context) *
+                                                            0.5,
                                                     color: enable
                                                         ? Colors.white
                                                         : Colors.grey,
@@ -213,12 +216,13 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                     'P o w e r e d  b y ',
                     style: TextStyle(
                         fontFamily: GoogleFonts.quicksand().fontFamily,
-                        fontSize: 11,
-                        color: Colors.white),
+                        fontSize: GeneralUtil.fontSize(context) * 0.35,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                   ),
                   Image.asset(
                     'assets/imgs/logo.png',
-                    width: 250,
+                    width: MediaQuery.of(context).size.width * 0.6,
                   )
                 ],
               )

@@ -115,6 +115,36 @@ class UrlUtil {
     return baseUrl + urlAssetGrow2;
   }
 
+  static String urlAssetOpnameList() => 'SOMobile_api/api/Opname/Getrows';
+
+  String getUrlAssetOpnameList() {
+    final String urlAssetOpnameList2 = urlAssetOpnameList();
+    return baseUrl + urlAssetOpnameList2;
+  }
+
+  static String urlAssetOpnameSchedule() => 'SOMobile_api/api/Opname/Getrow';
+
+  String getUrlAssetOpnameSchedule() {
+    final String urlAssetOpnameSchedule2 = urlAssetOpnameSchedule();
+    return baseUrl + urlAssetOpnameSchedule2;
+  }
+
+  static String urlAssetOpnameListDetail() =>
+      'SOMobile_api/api/OpnameResult/Getrows';
+
+  String getUrlAssetOpnameListDetail() {
+    final String urlAssetOpnameListDetail2 = urlAssetOpnameListDetail();
+    return baseUrl + urlAssetOpnameListDetail2;
+  }
+
+  static String urlCalendarOpnameResult() =>
+      'SOMobile_api/api/Dashboard/GetCalendarOpnameResult';
+
+  String getUrlCalendarOpnameResult() {
+    final String urlCalendarOpnameResult2 = urlCalendarOpnameResult();
+    return baseUrl + urlCalendarOpnameResult2;
+  }
+
   static String urlAddResgisterList() =>
       'SOMobile_api/api/AdditionalRequestAssetRegister/Getrows';
 
@@ -139,6 +169,14 @@ class UrlUtil {
     return baseUrl + urlAddDisposalList2;
   }
 
+  static String urlAddMutationList() =>
+      'SOMobile_api/api/AdditionalRequestMutation/Getrows';
+
+  String getUrlAddMutationList() {
+    final String urlAddDisposalList2 = urlAddMutationList();
+    return baseUrl + urlAddDisposalList2;
+  }
+
   static String urlAddMaintenanceList() =>
       'SOMobile_api/api/AdditionalRequestMaintenance/Getrows';
 
@@ -155,6 +193,48 @@ class UrlUtil {
     return baseUrl + urlDataCalendar2;
   }
 
+  static String urlNews() => 'ebase_api/api/SysNewsExternal/Getrows';
+
+  String getUrlNews() {
+    final String urlNews2 = urlNews();
+    return baseUrl + urlNews2;
+  }
+
+  static String urlSpeed() => 'somobile_api/api/Dashboard/GetRowOpnameSpeed';
+
+  String getUrlSpped() {
+    final String urlSpeed2 = urlSpeed();
+    return baseUrl + urlSpeed2;
+  }
+
+  static String urlBar() => 'somobile_api/api/Dashboard/GetDailySummaryBar';
+
+  String getUrlBar() {
+    final String urlBar2 = urlBar();
+    return baseUrl + urlBar2;
+  }
+
+  static String urlBarCalendar() => 'somobile_api/api/Dashboard/GetCalendarBar';
+
+  String getUrlBarCalendart() {
+    final String urlBarCalendar2 = urlBarCalendar();
+    return baseUrl + urlBarCalendar2;
+  }
+
+  static String urlPieCalendar() => 'somobile_api/api/Dashboard/GetCalendarPie';
+
+  String getUrlPieCalendart() {
+    final String urlPieCalendar2 = urlPieCalendar();
+    return baseUrl + urlPieCalendar2;
+  }
+
+  static String urlLine() => 'somobile_api/api/Dashboard/GetDailySummaryLine';
+
+  String getUrlLine() {
+    final String urlLine2 = urlLine();
+    return baseUrl + urlLine2;
+  }
+
   static String urlAssetGrowAdditional() =>
       'SOMobile_api/api/Asset/GetrowForAdditionalRequest';
 
@@ -168,6 +248,13 @@ class UrlUtil {
   String getUrlReserved() {
     final String urlReserved2 = urlReserved();
     return baseUrl + urlReserved2;
+  }
+
+  static String urlPrint() => 'SOMobile_api/api/Asset/RequestPrintBarcode';
+
+  String getUrlPrint() {
+    final String urlPrint2 = urlPrint();
+    return baseUrl + urlPrint2;
   }
 
   static String urlDDLLocation() =>
@@ -218,6 +305,13 @@ class UrlUtil {
     return baseUrl + urlddDetailSell2;
   }
 
+  static String urlDocPreview() => 'SOMobile_api/api/AdditionalRequest/Preview';
+
+  String getUrlDocPreview() {
+    final String urlDocPreview2 = urlDocPreview();
+    return baseUrl + urlDocPreview2;
+  }
+
   static String urlddDetailDisposal() =>
       'SOMobile_api/api/AdditionalRequestDisposal/Getrow';
 
@@ -231,6 +325,14 @@ class UrlUtil {
 
   String getUrlAddDetailMaintenance() {
     final String urlddDetailMaintenance2 = urlddDetailMaintenance();
+    return baseUrl + urlddDetailMaintenance2;
+  }
+
+  static String urlddDetailMutation() =>
+      'SOMobile_api/api/AdditionalRequestMutation/Getrow';
+
+  String getUrlAddDetailMutation() {
+    final String urlddDetailMaintenance2 = urlddDetailMutation();
     return baseUrl + urlddDetailMaintenance2;
   }
 
@@ -258,12 +360,27 @@ class UrlUtil {
     return baseUrl + urlDDLEmployee2;
   }
 
+  static String urlOpnameResult() => 'SOMobile_api/api/OpnameResult/Getrow';
+
+  String getUrlOpnameResult() {
+    final String urlOpnameResult2 = urlOpnameResult();
+    return baseUrl + urlOpnameResult2;
+  }
+
   static String urlDDLTos() =>
       'ebase_api/api/MasterModelDetailExternal/GetrowsDDL';
 
   String getUrlDDLTos() {
     final String urlDDLTos2 = urlDDLTos();
     return baseUrl + urlDDLTos2;
+  }
+
+  static String urlDDLPicMutation() =>
+      'ebase_api/api/SysEmployeeMainExternal/GetRowsPICMutation';
+
+  String getUrlDDLPicMutation() {
+    final String urlDDLPicMutation2 = urlDDLPicMutation();
+    return baseUrl + urlDDLPicMutation2;
   }
 
   static String urlSubmitAddReq() => 'SOMobile_api/api/AssetRegister/Insert';
@@ -303,6 +420,30 @@ class UrlUtil {
   String getUrlUploadDocDisposalReq() {
     final String urlUploadDocDisposalReq2 = urlUploadDocDisposalReq();
     return baseUrl + urlUploadDocDisposalReq2;
+  }
+
+  static String urlUploadDocSellReq() =>
+      'SOMobile_api/api/AdditionalRequestSellDocument/Upload';
+
+  String getUrlUploadDocSellReq() {
+    final String urlUploadDocSellReq2 = urlUploadDocSellReq();
+    return baseUrl + urlUploadDocSellReq2;
+  }
+
+  static String urlUploadDocMutationReq() =>
+      'SOMobile_api/api/AdditionalRequestMutationDocument/Upload';
+
+  String getUrlUploadDocMutationReq() {
+    final String urlUploadDocMutationReq2 = urlUploadDocMutationReq();
+    return baseUrl + urlUploadDocMutationReq2;
+  }
+
+  static String urlUploadDocMaintenanceReq() =>
+      'SOMobile_api/api/AdditionalRequestMaintenanceDocument/Upload';
+
+  String getUrlUploadDocMaintenanceReq() {
+    final String urlUploadDocMaintenanceReq2 = urlUploadDocMaintenanceReq();
+    return baseUrl + urlUploadDocMaintenanceReq2;
   }
 
   static String urlUploadDocOpname() =>

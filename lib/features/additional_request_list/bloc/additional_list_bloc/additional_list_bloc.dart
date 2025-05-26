@@ -86,6 +86,26 @@ class AdditionalListBloc
           emit(AdditionalListException(e.toString()));
         }
       }
+
+      if (event is MutationAttempt) {
+        try {
+          emit(AdditionalListLoading());
+          final additionalRequestListResponseModel =
+              await additionalRequestListRepo.attemptAdditionalMutation();
+          if (additionalRequestListResponseModel!.result == 1) {
+            emit(AdditionalListLoaded(
+                additionalRequestListResponseModel:
+                    additionalRequestListResponseModel));
+          } else if (additionalRequestListResponseModel.result == 0) {
+            emit(AdditionalListError(
+                additionalRequestListResponseModel.message));
+          } else {
+            emit(const AdditionalListException('error'));
+          }
+        } catch (e) {
+          emit(AdditionalListException(e.toString()));
+        }
+      }
     });
   }
 }

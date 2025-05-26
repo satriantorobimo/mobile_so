@@ -7,10 +7,12 @@ import 'package:mobile_so/features/additional_request_detail_form/bloc/submit_ad
 import 'package:mobile_so/features/additional_request_detail_form/bloc/upload_doc_req_bloc/bloc.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_disposal_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_maintenance_response_model.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_mutation_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_register_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/additional_request_detail_sell_response_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/argument_view_add_request.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/attachment_list.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/doc_preview_request_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/domain/repo/additional_request_detail_repo.dart';
 import 'package:mobile_so/features/additional_request_detail_form/domain/repo/submit_add_req_repo.dart';
 import 'package:mobile_so/features/navbar/navbar_provider.dart';
@@ -119,6 +121,8 @@ class _AdditionalRequestDetailFormViewScreenState
       setState(() {
         selectRequest = 'Other';
       });
+      detailViewBloc.add(DetailViewMutationAttempt(
+          pCode: widget.argumentViewAddReq.data.requestCode!));
     }
     setState(() {});
   }
@@ -175,7 +179,7 @@ class _AdditionalRequestDetailFormViewScreenState
               Text('Additional Request',
                   style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      fontSize: 20,
+                      fontSize: GeneralUtil.fontSize(context) * 0.55,
                       color: Colors.white)),
             ],
           ),
@@ -188,8 +192,8 @@ class _AdditionalRequestDetailFormViewScreenState
               Row(
                 children: [
                   SizedBox(
-                    width: 100,
-                    height: 100,
+                    width: MediaQuery.of(context).size.width * 0.23,
+                    height: MediaQuery.of(context).size.width * 0.23,
                     child: PrettyQrView.data(
                         data: widget.argumentViewAddReq.data.assetCode!,
                         decoration: const PrettyQrDecoration(
@@ -209,7 +213,7 @@ class _AdditionalRequestDetailFormViewScreenState
                               ? widget.argumentViewAddReq.data.itemName!
                               : widget.argumentViewAddReq.data.assetName!,
                           style: TextStyle(
-                              fontSize: 16,
+                              fontSize: GeneralUtil.fontSize(context) * 0.45,
                               color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
@@ -250,11 +254,14 @@ class _AdditionalRequestDetailFormViewScreenState
               const SizedBox(
                 height: 32,
               ),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Request Process To',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: GeneralUtil.fontSize(context) * 0.55,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
               const SizedBox(
@@ -273,7 +280,7 @@ class _AdditionalRequestDetailFormViewScreenState
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: GoogleFonts.poppins().fontFamily,
-                    fontSize: 16,
+                    fontSize: GeneralUtil.fontSize(context) * 0.45,
                   ),
                 ),
               ),
@@ -327,6 +334,18 @@ class _AdditionalRequestDetailFormViewScreenState
                     if (state is DetailViewMaintenanceLoaded) {
                       for (var item in state
                           .additionalRequestDetailMaintenanceResponseModel
+                          .data![0]
+                          .document!) {
+                        String extension = item.path!.split('.').last;
+                        setState(() {
+                          attachmentList.add(AttachmentList(
+                              item.path!, item.fileName!, extension));
+                        });
+                      }
+                    }
+                    if (state is DetailViewMutationLoaded) {
+                      for (var item in state
+                          .additionalRequestDetailMutationResponseModel
                           .data![0]
                           .document!) {
                         String extension = item.path!.split('.').last;
@@ -393,6 +412,10 @@ class _AdditionalRequestDetailFormViewScreenState
                           return formMaintenance(state
                               .additionalRequestDetailMaintenanceResponseModel);
                         }
+                        if (state is DetailViewMutationLoaded) {
+                          return formMutation(state
+                              .additionalRequestDetailMutationResponseModel);
+                        }
 
                         return const Center(
                           child: SizedBox(
@@ -402,11 +425,13 @@ class _AdditionalRequestDetailFormViewScreenState
                           ),
                         );
                       })),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Attachments List',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: GeneralUtil.fontSize(context) * 0.55,
+                      color: Colors.white),
                 ),
               ),
               attachmentList.isNotEmpty
@@ -426,8 +451,10 @@ class _AdditionalRequestDetailFormViewScreenState
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.75,
                                 child: Text(attachmentList[index].fileName,
-                                    style: const TextStyle(
-                                        fontSize: 16,
+                                    style: TextStyle(
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) *
+                                                0.45,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600)),
                               ),
@@ -436,48 +463,66 @@ class _AdditionalRequestDetailFormViewScreenState
                                   attachmentList[index]
                                                   .fileType
                                                   .toLowerCase() ==
-                                              '.pdf' ||
+                                              'pdf' ||
+                                          attachmentList[
+                                                      index]
+                                                  .fileType
+                                                  .toLowerCase() ==
+                                              'jpg' ||
                                           attachmentList[index]
                                                   .fileType
                                                   .toLowerCase() ==
-                                              '.jpg' ||
+                                              'png' ||
                                           attachmentList[index]
                                                   .fileType
                                                   .toLowerCase() ==
-                                              '.png' ||
-                                          attachmentList[index]
-                                                  .fileType
-                                                  .toLowerCase() ==
-                                              '.jpeg'
+                                              'jpeg'
                                       ? InkWell(
                                           onTap: () async {
                                             if (attachmentList[index]
                                                     .fileType
                                                     .toLowerCase() ==
-                                                '.pdf') {
-                                              await OpenFile.open(
-                                                  attachmentList[index]
-                                                      .filePath
-                                                      .toLowerCase());
-                                            } else if (attachmentList[index]
-                                                        .fileType
-                                                        .toLowerCase() ==
-                                                    '.jpg' ||
-                                                attachmentList[index]
-                                                        .fileType
-                                                        .toLowerCase() ==
-                                                    '.png' ||
-                                                attachmentList[index]
-                                                        .fileType
-                                                        .toLowerCase() ==
-                                                    '.jpeg') {
+                                                'pdf') {
                                               Navigator.pushNamed(
                                                   context,
                                                   StringRouterUtil
-                                                      .docPreviewScreenRoute,
+                                                      .docPreviewNetworkPdfScreenRoute,
                                                   arguments:
-                                                      attachmentList[index]
-                                                          .filePath);
+                                                      DocPreviewRequestModel(
+                                                          pFileName:
+                                                              attachmentList[
+                                                                      index]
+                                                                  .fileName,
+                                                          pFilePaths:
+                                                              attachmentList[
+                                                                      index]
+                                                                  .filePath));
+                                            } else if (attachmentList[index]
+                                                        .fileType
+                                                        .toLowerCase() ==
+                                                    'jpg' ||
+                                                attachmentList[index]
+                                                        .fileType
+                                                        .toLowerCase() ==
+                                                    'png' ||
+                                                attachmentList[index]
+                                                        .fileType
+                                                        .toLowerCase() ==
+                                                    'jpeg') {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  StringRouterUtil
+                                                      .docPreviewNetworkScreenRoute,
+                                                  arguments:
+                                                      DocPreviewRequestModel(
+                                                          pFileName:
+                                                              attachmentList[
+                                                                      index]
+                                                                  .fileName,
+                                                          pFilePaths:
+                                                              attachmentList[
+                                                                      index]
+                                                                  .filePath));
                                             } else {}
                                           },
                                           child: const Icon(
@@ -486,30 +531,6 @@ class _AdditionalRequestDetailFormViewScreenState
                                           ),
                                         )
                                       : Container(),
-                                  const SizedBox(
-                                    width: 4,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        attachmentList.removeAt(index);
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                          color: Color(0xFF3B3B3B),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8))),
-                                      padding: EdgeInsets.all(5),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  )
                                 ],
                               )
                             ],
@@ -535,11 +556,14 @@ class _AdditionalRequestDetailFormViewScreenState
     _remarksCtrl.text = data.data![0].remarks!;
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Reason',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -558,18 +582,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Net Book Value',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -588,18 +615,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Selling Price',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -618,18 +648,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Gain / Loss',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -650,18 +683,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: gainloss < 0 ? Colors.red : Colors.green,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -698,11 +734,14 @@ class _AdditionalRequestDetailFormViewScreenState
     _remarksCtrl.text = data.data![0].remarks!;
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Item',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -721,18 +760,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Purchase Condition',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -751,15 +793,18 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'PIC',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -778,18 +823,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -826,11 +874,14 @@ class _AdditionalRequestDetailFormViewScreenState
     _remarksCtrl.text = data.data![0].remarks!;
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Reason',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -849,18 +900,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.white,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Purchase Price',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -879,18 +933,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Total Depre. Comm.',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -909,18 +966,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Net Book Value',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -939,18 +999,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Requestor',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -958,7 +1021,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 10),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -969,18 +1032,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1017,11 +1083,14 @@ class _AdditionalRequestDetailFormViewScreenState
     _remarksCtrl.text = data.data![0].remarks!;
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Asset Name',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1039,18 +1108,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Serial No',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1069,18 +1141,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Location',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1099,18 +1174,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Maintenance By',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1129,18 +1207,21 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Type of Service',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1159,18 +1240,266 @@ class _AdditionalRequestDetailFormViewScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Requestor',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(bottom: 10),
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+            ),
+          ),
+          child: Text(
+            '${data.data![0].requestorName} - ${data.data![0].requestorCode}',
+            style: TextStyle(
+              color: Colors.grey,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Remarks *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _remarksCtrl,
+          maxLength: 500,
+          minLines: 3,
+          maxLines: 10,
+          readOnly: true,
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+            counterStyle: TextStyle(color: Color(0xFFE6E7E8)),
+            isDense: true,
+            contentPadding: EdgeInsets.only(bottom: 16),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE6E7E8)),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE6E7E8)),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 32,
+        ),
+      ],
+    );
+  }
+
+  Widget formMutation(AdditionalRequestDetailMutationResponseModel data) {
+    _remarksCtrl.text = data.data![0].remarks!;
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Asset Name',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+            ),
+          ),
+          child: Text(
+            data.data![0].assetName!,
+            style: TextStyle(
+              color: Colors.grey,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        // const Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Text(
+        //     'FA Type & Category',
+        //     style: TextStyle( fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.55, color: Colors.white),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 8,
+        // ),
+        // Container(
+        //   width: double.infinity,
+        //   height: 35,
+        //   decoration: const BoxDecoration(
+        //     border: Border(
+        //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+        //     ),
+        //   ),
+        //   child: Text(
+        //     data.data![0].!,
+        //     style: TextStyle(
+        //       color: Colors.grey,
+        //       fontFamily: GoogleFonts.poppins().fontFamily,
+        //        fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.45,
+        //     ),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 16,
+        // ),
+        // const Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Text(
+        //     'Location',
+        //     style: TextStyle( fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.55, color: Colors.white),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 8,
+        // ),
+        // Container(
+        //   width: double.infinity,
+        //   height: 35,
+        //   decoration: const BoxDecoration(
+        //     border: Border(
+        //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+        //     ),
+        //   ),
+        //   child: Text(
+        //     data.data![0].locationName!,
+        //     style: TextStyle(
+        //       color: Colors.grey,
+        //       fontFamily: GoogleFonts.poppins().fontFamily,
+        //        fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.45,
+        //     ),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 16,
+        // ),
+        // const Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Text(
+        //     'Maintenance By',
+        //     style: TextStyle( fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.55, color: Colors.white),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 8,
+        // ),
+        // Container(
+        //   width: double.infinity,
+        //   height: 35,
+        //   decoration: const BoxDecoration(
+        //     border: Border(
+        //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+        //     ),
+        //   ),
+        //   child: Text(
+        //     data.data![0].maintenanceBy!,
+        //     style: TextStyle(
+        //       color: Colors.grey,
+        //       fontFamily: GoogleFonts.poppins().fontFamily,
+        //        fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.45,
+        //     ),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 16,
+        // ),
+        // const Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Text(
+        //     'Type of Service',
+        //     style: TextStyle( fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.55, color: Colors.white),
+        //   ),
+        // ),
+        // const SizedBox(
+        //   height: 8,
+        // ),
+        // Container(
+        //   width: double.infinity,
+        //   height: 35,
+        //   decoration: const BoxDecoration(
+        //     border: Border(
+        //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+        //     ),
+        //   ),
+        //   child: Text(
+        //     data.data![0].serviceName!,
+        //     style: TextStyle(
+        //       color: Colors.grey,
+        //       fontFamily: GoogleFonts.poppins().fontFamily,
+        //        fontSize:
+        // GeneralUtil.fontSize(context) *
+        //     0.45,
+        //     ),
+        //   ),
+        // ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Mutation To',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1185,22 +1514,25 @@ class _AdditionalRequestDetailFormViewScreenState
             ),
           ),
           child: Text(
-            '${data.data![0].requestorName} - ${data.data![0].requestorCode}',
+            '${data.data![0].toPicCode} - ${data.data![0].toPicName}',
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(

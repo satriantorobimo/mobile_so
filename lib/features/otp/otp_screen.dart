@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_so/features/otp/bloc/resend_bloc/bloc.dart';
@@ -48,7 +49,8 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48.0),
+            padding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.height * 0.07),
             child: Column(
               children: [
                 Padding(
@@ -69,12 +71,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       Text('StockOpname .',
                           style: TextStyle(
                               fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontSize: 20,
+                              fontSize: GeneralUtil.fontSize(context) * 0.6,
                               color: Colors.white)),
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                 const Icon(
                   Icons.email_rounded,
                   color: Colors.white,
@@ -82,12 +84,12 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.65,
                   child: Text('We Have Send Code Number To Your Email',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: GoogleFonts.raleway().fontFamily,
-                          fontSize: 20,
+                          fontSize: GeneralUtil.fontSize(context) * 0.7,
                           fontWeight: FontWeight.bold,
                           color: Colors.white)),
                 ),
@@ -98,7 +100,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 13,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                           fontWeight: FontWeight.w400,
                           color: Colors.white)),
                 ),
@@ -108,7 +110,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: Text(
                     'ENTER YOUR OTP',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: GeneralUtil.fontSize(context) * 0.5,
                       color: Colors.white,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                     ),
@@ -120,8 +122,8 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: Pinput(
                     defaultPinTheme: defaultPinTheme,
                     controller: _pinPutController,
-
                     hapticFeedbackType: HapticFeedbackType.lightImpact,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onCompleted: (String verificationCode) {},
                     onChanged: (code) {
                       if (code.length == 4) {
@@ -137,7 +139,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     separatorBuilder: (index) => const SizedBox(width: 16),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Row(
@@ -146,7 +148,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       Text(
                         'Haven`t receive email?',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: GeneralUtil.fontSize(context) * 0.32,
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
                         ),
@@ -198,7 +200,8 @@ class _OtpScreenState extends State<OtpScreen> {
                                   child: Text(
                                     'Send Email Again',
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.32,
                                       color: Colors.white,
                                       fontFamily:
                                           GoogleFonts.poppins().fontFamily,
@@ -209,7 +212,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                 BlocListener(
                     bloc: validateOtpBloc,
                     listener: (_, ValidateOtpState state) {
@@ -285,17 +288,20 @@ class _OtpScreenState extends State<OtpScreen> {
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.6,
-                                    height: 66,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.09,
                                     decoration: BoxDecoration(
                                       color: enable
                                           ? const Color(0xFFE45A04)
                                           : Colors.grey,
                                       borderRadius: BorderRadius.circular(28),
                                     ),
-                                    child: const Center(
+                                    child: Center(
                                         child: Text('Submit',
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.5,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600))),
                                   ),

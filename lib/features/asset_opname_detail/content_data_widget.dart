@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
+import 'package:mobile_so/utility/general_util.dart';
 
 class ContentDataWidget extends StatelessWidget {
   final String title;
@@ -36,8 +37,9 @@ class ContentDataWidget extends StatelessWidget {
                   children: [
                     Text(
                       content,
-                      style: const TextStyle(
-                          fontSize: 16, color: Color(0xFFbfbfbf)),
+                      style: TextStyle(
+                          fontSize: GeneralUtil.fontSize(context) * 0.5,
+                          color: Color(0xFFbfbfbf)),
                     ),
                     const SizedBox(width: 4),
                     PannableRatingBar(
@@ -59,8 +61,9 @@ class ContentDataWidget extends StatelessWidget {
                 )
               : Text(
                   content,
-                  style:
-                      const TextStyle(fontSize: 16, color: Color(0xFFbfbfbf)),
+                  style: TextStyle(
+                      fontSize: GeneralUtil.fontSize(context) * 0.5,
+                      color: Color(0xFFbfbfbf)),
                 ),
         )
       ],

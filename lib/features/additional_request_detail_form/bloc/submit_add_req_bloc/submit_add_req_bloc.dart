@@ -77,6 +77,23 @@ class SubmitAddReqBloc extends Bloc<SubmitAddReqEvent, SubmitAddReqState> {
           emit(SubmitAddReqException(e.toString()));
         }
       }
+      if (event is SubmitAdditionalMutationAttempt) {
+        try {
+          emit(SubmitAddReqLoading());
+          final generalResponseModel = await submitAddReqRepo
+              .attemptSubmitAdditionalMutation(event.submitRequestModel);
+          if (generalResponseModel!.result == 1) {
+            emit(
+                SubmitAddReqLoaded(generalResponseModel: generalResponseModel));
+          } else if (generalResponseModel.result == 0) {
+            emit(SubmitAddReqError(generalResponseModel.message));
+          } else {
+            emit(const SubmitAddReqException('error'));
+          }
+        } catch (e) {
+          emit(SubmitAddReqException(e.toString()));
+        }
+      }
     });
   }
 }

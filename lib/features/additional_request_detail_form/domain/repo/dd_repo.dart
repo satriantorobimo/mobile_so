@@ -1,6 +1,7 @@
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_employee.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_item_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_model.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_pic_mutation.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_tos_mdel.dart';
 import 'package:mobile_so/features/additional_request_detail_form/domain/api/dd_api.dart';
 
@@ -24,4 +25,7 @@ class DropDownRepo {
 
   Future<DropDownTosModel?> attemptDDTos(String assetCode) =>
       dropDownApi.attemptDDTos(assetCode);
+
+  Future<DropDownPicMutation?> attemptDDPicMutation(String action) =>
+      dropDownApi.attemptDDPicMutation(action);
 }

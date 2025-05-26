@@ -5,6 +5,7 @@ class ArgumentAddReq {
   bool sell = false;
   bool disposal = false;
   bool maintenance = false;
+  bool mutation = false;
   bool other = false;
   final AssetGrowResponseModel assetGrowResponseModel;
 
@@ -14,5 +15,6 @@ class ArgumentAddReq {
       required this.disposal,
       required this.maintenance,
       required this.other,
+      required this.mutation,
       required this.assetGrowResponseModel});
 }

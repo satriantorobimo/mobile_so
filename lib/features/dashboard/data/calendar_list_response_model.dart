@@ -58,13 +58,15 @@ class Data {
   String? opnameEndDate;
   String? status;
   int? totalAsset;
+  int? totalAssetDone;
 
   Data(
       {this.code,
       this.opnameStartDate,
       this.opnameEndDate,
       this.status,
-      this.totalAsset});
+      this.totalAsset,
+      this.totalAssetDone});
 
   Data.fromJson(Map<String, dynamic> json) {
     code = json['code'];
@@ -72,6 +74,7 @@ class Data {
     opnameEndDate = json['opname_end_date'];
     status = json['status'];
     totalAsset = json['total_asset'];
+    totalAssetDone = json['total_asset_done'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +84,7 @@ class Data {
     data['opname_end_date'] = opnameEndDate;
     data['status'] = status;
     data['total_asset'] = totalAsset;
+    data['total_asset_done'] = totalAssetDone;
     return data;
   }
 }

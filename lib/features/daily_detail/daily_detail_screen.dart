@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobile_so/features/dashboard/bar_chart.dart';
-import 'package:mobile_so/features/dashboard/class_status.dart';
-import 'package:mobile_so/features/dashboard/line_chart.dart';
+import 'package:mobile_so/features/asset_opname_list/domain/repo/asset_opname_list_repo.dart';
+import 'package:mobile_so/features/daily_detail/data/argument_daily_detail_model.dart';
+import 'package:mobile_so/features/dashboard/bar_chart_detail.dart';
+import 'package:mobile_so/features/dashboard/pie_chart.dart';
+import 'package:mobile_so/features/navbar/navbar_provider.dart';
+import 'package:mobile_so/utility/general_util.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
 import 'package:mobile_so/utility/string_router_util.dart';
-// import 'package:flutter_calendar_carousel/classes/event.dart';
-// import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:provider/provider.dart';
+
+import '../asset_opname_list/bloc/asset_opname_list_bloc/bloc.dart';
 
 class DailyDetailScreen extends StatefulWidget {
-  const DailyDetailScreen({super.key});
+  const DailyDetailScreen({super.key, required this.argumentDailyDetailModel});
+  final ArgumentDailyDetailModel argumentDailyDetailModel;
 
   @override
   State<DailyDetailScreen> createState() => _DailyDetailScreenState();
@@ -19,10 +25,14 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
   String name = '';
   String uid = '';
   String company = '';
+  AssetOpnameListBloc assetOpnameListBloc =
+      AssetOpnameListBloc(assetOpnameListRepo: AssetOpnameListRepo());
 
   @override
   void initState() {
     getUserData();
+    assetOpnameListBloc
+        .add(AssetOpnameScheduletAttempt(widget.argumentDailyDetailModel.code));
     super.initState();
   }
 
@@ -34,124 +44,8 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
     setState(() {});
   }
 
-  // final EventList<Event> _markedDateMap = EventList<Event>(
-  //   events: {
-  //     DateTime(2024, 5, 10): [
-  //       Event(
-  //         date: DateTime(2024, 5, 10),
-  //         title: 'Event 1',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.red,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 10),
-  //         title: 'Event 2',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.green,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 10),
-  //         title: 'Event 3',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.red,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //     ],
-  //     DateTime(2024, 5, 9): [
-  //       Event(
-  //         date: DateTime(2024, 5, 9),
-  //         title: 'Event 1',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.green,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 9),
-  //         title: 'Event 2',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.red,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 9),
-  //         title: 'Event 3',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.green,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //     ],
-  //     DateTime(2024, 5, 8): [
-  //       Event(
-  //         date: DateTime(2024, 5, 8),
-  //         title: 'Event 1',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.red,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 8),
-  //         title: 'Event 2',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.red,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //       Event(
-  //         date: DateTime(2024, 5, 8),
-  //         title: 'Event 3',
-  //         icon: const Icon(Icons.circle),
-  //         dot: Container(
-  //           margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //           color: Colors.green,
-  //           height: 4.0,
-  //           width: 4.0,
-  //         ),
-  //       ),
-  //     ],
-  //   },
-  // );
-
   @override
   Widget build(BuildContext context) {
-    final List<Status> data = [
-      Status('Electronic', 50),
-      Status('Furniture', 300),
-      Status('Machine', 10),
-      Status('Others', 5),
-    ];
     return Scaffold(
       backgroundColor: const Color(0xFF130139),
       body: Column(
@@ -212,7 +106,7 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
                         style: TextStyle(
                             fontFamily: GoogleFonts.poppins().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                            fontSize: GeneralUtil.fontSize(context) * 0.3,
                             color: Colors.white)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,21 +115,21 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
                         Text(company,
                             style: TextStyle(
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: GeneralUtil.fontSize(context) * 0.3,
                                 color: Colors.white)),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.check_circle_rounded,
                               color: Colors.green,
-                              size: 12,
+                              size: MediaQuery.of(context).size.height * 0.015,
                             ),
                             const SizedBox(width: 4),
                             Text('Active',
@@ -243,7 +137,8 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
                                     fontFamily:
                                         GoogleFonts.poppins().fontFamily,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize:
+                                        GeneralUtil.fontSize(context) * 0.3,
                                     color: Colors.white)),
                           ],
                         )
@@ -254,209 +149,201 @@ class _DailyDetailScreenState extends State<DailyDetailScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32.0, left: 24.0, right: 24.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Color(0xFF122E69),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Dashboard - 02 May 2024',
-                      style: TextStyle(
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: const Color(0xFF00B7FF))),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 2,
-                    color: Color(0xFFEEEEEE).withOpacity(0.5),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 115,
-                            child: Text('Opname No',
-                                style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.poppins().fontFamily,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Colors.white)),
-                          ),
-                          Text(': 012.05.2024',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 12,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 115,
-                            child: Text('Opname Location',
-                                style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.poppins().fontFamily,
-                                    fontSize: 12,
-                                    color: Colors.white)),
-                          ),
-                          Text(': PT ABC',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 12,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 115,
-                            child: Text('Asset Condition',
-                                style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.poppins().fontFamily,
-                                    fontSize: 12,
-                                    color: Colors.white)),
-                          ),
-                          Text(': Good',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 12,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 115,
-                            child: Text('Total',
-                                style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.poppins().fontFamily,
-                                    fontSize: 12,
-                                    color: Colors.white)),
-                          ),
-                          Text(': 300',
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 12,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BarsChart(data: data),
-                const SizedBox(height: 24),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+          Expanded(
+              child: ListView(
+                  shrinkWrap: true,
+                  padding:
+                      const EdgeInsets.only(top: 32.0, left: 24.0, right: 24.0),
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          color: const Color(0xFFFFB300),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('Electronic',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.nunito().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.white)),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          color: const Color(0xFF00BF63),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('Furniture',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.nunito().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.white)),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          color: const Color(0xFFD00E00),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('Machine',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.nunito().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.white)),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 10,
-                          height: 10,
-                          color: const Color(0xFF2F5F98),
-                        ),
-                        const SizedBox(width: 4),
-                        Text('Others',
-                            style: TextStyle(
-                                fontFamily: GoogleFonts.nunito().fontFamily,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.white)),
-                      ],
-                    ),
-                  ],
+                BlocListener(
+                    bloc: assetOpnameListBloc,
+                    listener: (_, AssetOpnameListState state) {
+                      if (state is AssetOpnameListLoading) {}
+                      if (state is AssetOpnameListLoaded) {}
+                      if (state is AssetOpnameListError) {
+                        GeneralUtil().showSnackBarError(context, state.error!);
+                      }
+                      if (state is AssetOpnameListException) {
+                        if (state.error.toLowerCase() ==
+                            'unauthorized access') {
+                          GeneralUtil()
+                              .showSnackBarError(context, 'Session Expired');
+                          var bottomBarProvider = Provider.of<NavbarProvider>(
+                              context,
+                              listen: false);
+                          bottomBarProvider.setPage(0);
+                          bottomBarProvider.setTab(0);
+                          SharedPrefUtil.clearSharedPref();
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                StringRouterUtil.loginScreenRoute,
+                                (route) => false);
+                          });
+                        } else {
+                          GeneralUtil().showSnackBarError(context, state.error);
+                        }
+                      }
+                    },
+                    child: BlocBuilder(
+                        bloc: assetOpnameListBloc,
+                        builder: (context, AssetOpnameListState state) {
+                          if (state is AssetOpnameListLoading) {
+                            return const Center(
+                              child: SizedBox(
+                                width: 45,
+                                height: 45,
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          if (state is AssetOpnameShceduleLoaded) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                  color: Color(0xFF122E69),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0, horizontal: 32.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Dashboard - ${GeneralUtil.dateConverDailyDetail(widget.argumentDailyDetailModel.date)}',
+                                      style: TextStyle(
+                                          fontFamily:
+                                              GoogleFonts.poppins().fontFamily,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: const Color(0xFF00B7FF))),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 2,
+                                    color: Color(0xFFEEEEEE).withOpacity(0.5),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 115,
+                                            child: Text('Opname No',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        GoogleFonts.poppins()
+                                                            .fontFamily,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: Colors.white)),
+                                          ),
+                                          Text(
+                                              ': ${widget.argumentDailyDetailModel.code}',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      GoogleFonts.poppins()
+                                                          .fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 115,
+                                            child: Text('Opname Location',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        GoogleFonts.poppins()
+                                                            .fontFamily,
+                                                    fontSize: 12,
+                                                    color: Colors.white)),
+                                          ),
+                                          Text(
+                                              ': ${state.assetOpnameScheduleResponseModel.data![0].locationName == '' ? '-' : state.assetOpnameScheduleResponseModel.data![0].locationName}',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      GoogleFonts.poppins()
+                                                          .fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 115,
+                                            child: Text('Status',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        GoogleFonts.poppins()
+                                                            .fontFamily,
+                                                    fontSize: 12,
+                                                    color: Colors.white)),
+                                          ),
+                                          Text(
+                                              ': ${state.assetOpnameScheduleResponseModel.data![0].status}',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      GoogleFonts.poppins()
+                                                          .fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 115,
+                                            child: Text('Total',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        GoogleFonts.poppins()
+                                                            .fontFamily,
+                                                    fontSize: 12,
+                                                    color: Colors.white)),
+                                          ),
+                                          Text(
+                                              ': ${state.assetOpnameScheduleResponseModel.data![0].totalAsset}',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      GoogleFonts.poppins()
+                                                          .fontFamily,
+                                                  fontSize: 12,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          return Container();
+                        })),
+                const SizedBox(height: 24),
+                BarsChartDetail(
+                  code: widget.argumentDailyDetailModel.code,
+                  date: widget.argumentDailyDetailModel.date,
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: const LinesChart(isShowingMainData: true),
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: PieChart(
+                    code: widget.argumentDailyDetailModel.code,
+                    date: widget.argumentDailyDetailModel.date,
+                  ),
                 ),
-              ],
-            ),
-          )
+                const SizedBox(height: 40),
+              ]))
         ],
       ),
     );

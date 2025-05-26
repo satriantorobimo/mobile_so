@@ -31,3 +31,10 @@ class MaintenanceAttempt extends AdditionalListEvent {
   @override
   List<Object> get props => [];
 }
+
+class MutationAttempt extends AdditionalListEvent {
+  const MutationAttempt();
+
+  @override
+  List<Object> get props => [];
+}

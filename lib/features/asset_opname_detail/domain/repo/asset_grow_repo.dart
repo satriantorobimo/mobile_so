@@ -11,9 +11,12 @@ class AssetGrowRepo {
       assetGrowApi.attemptAssetGrow(assetGrowRequestModel);
 
   Future<AssetGrowResponseModel?> attemptAssetGrowAdditional(
-      AssetGrowRequestModel assetGrowRequestModel) =>
+          AssetGrowRequestModel assetGrowRequestModel) =>
       assetGrowApi.attemptAssetGrowAdditional(assetGrowRequestModel);
 
   Future<GeneralResponseModel?> attemptReserved(String assetCode) =>
       assetGrowApi.attemptReserved(assetCode);
+
+  Future<GeneralResponseModel?> attemptPrint(String assetCode) =>
+      assetGrowApi.attemptPrint(assetCode);
 }

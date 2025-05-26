@@ -18,13 +18,23 @@ class SubmitAddReqRepo {
   Future<GeneralResponseModel?> attemptSubmitAdditionalMaintenance(
           SubmitRequestModel submitRequestModel) =>
       submitAddReqApi.attemptSubmitAdditionalMaintenance(submitRequestModel);
+
+  Future<GeneralResponseModel?> attemptSubmitAdditionalMutation(
+          SubmitRequestModel submitRequestModel) =>
+      submitAddReqApi.attemptSubmitAdditionalMutation(submitRequestModel);
   Future<GeneralResponseModel?> attemptUpload(
           UploadDocRequestModel uploadDocRequestModel) =>
       submitAddReqApi.attemptUpload(uploadDocRequestModel);
   Future<GeneralResponseModel?> attemptUploadDisposal(
           UploadDocRequestModel uploadDocRequestModel, String opnameCode) =>
       submitAddReqApi.attemptUploadDisposal(uploadDocRequestModel, opnameCode);
-
+  Future<GeneralResponseModel?> attemptUploadMaintenance(
+          UploadDocRequestModel uploadDocRequestModel, String opnameCode) =>
+      submitAddReqApi.attemptUploadMaintenance(
+          uploadDocRequestModel, opnameCode);
+  Future<GeneralResponseModel?> attemptUploadMutation(
+          UploadDocRequestModel uploadDocRequestModel, String opnameCode) =>
+      submitAddReqApi.attemptUploadMutation(uploadDocRequestModel, opnameCode);
   Future<GeneralResponseModel?> attemptUploadSell(
           UploadDocRequestModel uploadDocRequestModel, String opnameCode) =>
       submitAddReqApi.attemptUploadSell(uploadDocRequestModel, opnameCode);

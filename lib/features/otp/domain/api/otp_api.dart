@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile_so/features/email_otp/data/change_password_response_model.dart';
 import 'package:mobile_so/features/otp/data/otp_validate_request_model.dart';
@@ -35,6 +36,8 @@ class OtpApi {
             ChangePasswordResponseModel.fromJson(jsonDecode(res.body));
         throw changePasswordResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -63,6 +66,8 @@ class OtpApi {
             ChangePasswordResponseModel.fromJson(jsonDecode(res.body));
         throw changePasswordResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }

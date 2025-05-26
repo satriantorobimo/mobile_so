@@ -39,21 +39,22 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 80.0),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.1),
                 child: Column(
                   children: [
-                    Text('StockOpname .',
+                    Text('StockOpname.',
                         style: TextStyle(
                             fontFamily: GoogleFonts.leagueSpartan().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: 45,
+                            fontSize: GeneralUtil.fontSize(context) * 1.2,
                             color: Colors.white)),
-                    const SizedBox(height: 16),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                     Text(
                       'M o b i l e',
                       style: TextStyle(
                           fontFamily: GoogleFonts.quicksand().fontFamily,
-                          fontSize: 13,
+                          fontSize: GeneralUtil.fontSize(context) * 0.4,
                           color: Colors.white),
                     )
                   ],
@@ -63,16 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: Column(
                   children: [
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'USERNAME',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: GeneralUtil.fontSize(context) * 0.4,
+                            color: Colors.white),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015),
                     Material(
                       elevation: 6,
                       shadowColor: Colors.grey.withOpacity(0.4),
@@ -95,7 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         decoration: InputDecoration(
                             isDense: true,
-                            contentPadding: const EdgeInsets.all(24),
+                            contentPadding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height * 0.035),
                             filled: true,
                             fillColor: const Color(0xFFB1ADBC),
                             border: OutlineInputBorder(
@@ -104,19 +107,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             )),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    const Align(
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015),
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'PASSWORD',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: GeneralUtil.fontSize(context) * 0.4,
+                            color: Colors.white),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015),
                     Material(
                       elevation: 6,
                       shadowColor: Colors.grey.withOpacity(0.4),
@@ -140,7 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                             isDense: true,
-                            contentPadding: const EdgeInsets.all(24),
+                            contentPadding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height * 0.035),
                             hintStyle:
                                 TextStyle(color: Colors.grey.withOpacity(0.5)),
                             filled: true,
@@ -151,9 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             )),
                       ),
                     ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025),
                     BlocListener(
                         bloc: loginBloc,
                         listener: (_, LoginState state) {
@@ -215,7 +218,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : null,
                                       child: Container(
                                         width: double.infinity,
-                                        height: 66,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
                                         decoration: BoxDecoration(
                                             color: Colors.transparent,
                                             borderRadius:
@@ -231,7 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     fontFamily:
                                                         GoogleFonts.poppins()
                                                             .fontFamily,
-                                                    fontSize: 16,
+                                                    fontSize:
+                                                        GeneralUtil.fontSize(
+                                                                context) *
+                                                            0.5,
                                                     color: enable
                                                         ? Colors.white
                                                         : Colors.grey,
@@ -240,19 +248,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     );
                             })),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025),
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(
                             context, StringRouterUtil.emailOtpScreenRoute);
                       },
-                      child: const Align(
+                      child: Align(
                         alignment: Alignment.center,
                         child: Text(
                           'Forgot Password?',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: GeneralUtil.fontSize(context) * 0.4,
+                              color: Colors.white),
                         ),
                       ),
                     ),
@@ -265,12 +274,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     'P o w e r e d  b y ',
                     style: TextStyle(
                         fontFamily: GoogleFonts.quicksand().fontFamily,
-                        fontSize: 11,
-                        color: Colors.white),
+                        fontSize: GeneralUtil.fontSize(context) * 0.35,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                   ),
                   Image.asset(
                     'assets/imgs/logo.png',
-                    width: 250,
+                    width: MediaQuery.of(context).size.width * 0.6,
                   )
                 ],
               )

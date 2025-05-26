@@ -268,6 +268,7 @@ class Data {
   String? coverageType;
   String? assetCode;
   String? assetSpecification;
+  String? specification;
   String? imei;
   String? serialNo;
   int? star1;
@@ -338,6 +339,7 @@ class Data {
       this.numberOfFloor,
       this.assetCode,
       this.assetSpecification,
+      this.specification,
       this.imei,
       this.isAuthorizedWorkshop,
       this.serialNo,
@@ -636,6 +638,7 @@ class Data {
     opnameByCode = json['opname_by_code'];
     opnameCode = json['opname_code'];
     acquisitionYear = json['acquisition_year'];
+    specification = json['specification'];
     buildingSize = json['building_size'];
     buildingSizeLb = json['building_size_lb'];
     buildingSizeLt = json['building_size_lt'];

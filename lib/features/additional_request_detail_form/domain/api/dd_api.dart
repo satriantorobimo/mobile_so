@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_employee.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_item_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_model.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_pic_mutation.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_tos_mdel.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
 import 'package:mobile_so/utility/url_util.dart';
@@ -12,6 +14,7 @@ class DropDownApi {
   DropDownModel dropDownModel = DropDownModel();
   DropDownEmployee dropDownEmployee = DropDownEmployee();
   DropDownTosModel dropDownTosModel = DropDownTosModel();
+  DropDownPicMutation dropDownPicMutation = DropDownPicMutation();
 
   UrlUtil urlUtil = UrlUtil();
 
@@ -41,6 +44,8 @@ class DropDownApi {
         dropDownItemModel = DropDownItemModel.fromJson(jsonDecode(res.body));
         throw dropDownItemModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -72,6 +77,8 @@ class DropDownApi {
         dropDownModel = DropDownModel.fromJson(jsonDecode(res.body));
         throw dropDownModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -103,6 +110,8 @@ class DropDownApi {
         dropDownModel = DropDownModel.fromJson(jsonDecode(res.body));
         throw dropDownModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -136,6 +145,8 @@ class DropDownApi {
         dropDownModel = DropDownModel.fromJson(jsonDecode(res.body));
         throw dropDownModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -167,6 +178,8 @@ class DropDownApi {
         dropDownEmployee = DropDownEmployee.fromJson(jsonDecode(res.body));
         throw dropDownEmployee.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -198,6 +211,43 @@ class DropDownApi {
         dropDownTosModel = DropDownTosModel.fromJson(jsonDecode(res.body));
         throw dropDownTosModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
+
+  Future<DropDownPicMutation> attemptDDPicMutation(String action) async {
+    List a = [];
+    final String? token = await SharedPrefUtil.getSharedString('token');
+    final String? uid = await SharedPrefUtil.getSharedString('uid');
+    String reversedString = uid!.split('').reversed.join('');
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(reversedString);
+    final Map<String, String> header =
+        urlUtil.getHeaderTypeWithToken(token!, encoded);
+
+    final Map mapData = {};
+    mapData['action'] = action;
+    a.add(mapData);
+
+    final json = jsonEncode(a);
+
+    try {
+      final res = await http.post(Uri.parse(urlUtil.getUrlDDLPicMutation()),
+          body: json, headers: header);
+      if (res.statusCode == 200) {
+        dropDownPicMutation =
+            DropDownPicMutation.fromJson(jsonDecode(res.body));
+        return dropDownPicMutation;
+      } else {
+        dropDownPicMutation =
+            DropDownPicMutation.fromJson(jsonDecode(res.body));
+        throw dropDownPicMutation.message!;
+      }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }

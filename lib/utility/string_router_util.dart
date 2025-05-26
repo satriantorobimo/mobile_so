@@ -19,7 +19,10 @@ class StringRouterUtil {
       '/asset-opname-detail-route';
   static const String assetOpnameDetailFormScreenRoute =
       '/asset-opname-detail-form-route';
-  static const String assetOpnameListScreenRoute = '/asset-opname-list-route';
+  static const String assetOpnameDetailFormViewScreenRoute =
+      '/asset-opname-detail-form-view-route';
+  static const String assetOpnameListDetailScreenRoute =
+      '/asset-opname-list-detail-route';
   static const String dashboardScreenRoute = '/dashboard-route';
   static const String dashboardDetailScreenRoute = '/dashboard-detail-route';
   static const String notificationScreenRoute = '/notification-route';
@@ -32,4 +35,9 @@ class StringRouterUtil {
   static const String dailyDetailScreenRoute = '/daily-detail-route';
   static const String dropDownScreenRoute = '/drop-down-route';
   static const String docPreviewScreenRoute = '/doc-preview-route';
+  static const String docPreviewNetworkScreenRoute =
+      '/doc-preview-network-route';
+
+  static const String docPreviewNetworkPdfScreenRoute =
+      '/doc-preview-network-pdf-route';
 }

@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_employee.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/upload_doc_request_model.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/data/arguments_view_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/ddl_location_response_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/ddl_status_response_model.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/data/opname_result_response_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/submit_opname_request_model.dart';
 import 'package:mobile_so/features/login/data/general_response_model.dart';
 import 'package:mobile_so/utility/shared_pref_util.dart';
@@ -20,8 +22,47 @@ class OpnameSubmitApi {
   DdlStatusResponseModel ddlStatusResponseModel = DdlStatusResponseModel();
   DropDownEmployee dropDownEmployee = DropDownEmployee();
   GeneralResponseModel generalResponseModel = GeneralResponseModel();
+  OpnameResultResponseModel opnameResultResponseModel =
+      OpnameResultResponseModel();
 
   UrlUtil urlUtil = UrlUtil();
+
+  Future<OpnameResultResponseModel> attemptOpnameResult(
+      ArgumentsViewModel argumentViewModel) async {
+    List a = [];
+    final String? token = await SharedPrefUtil.getSharedString('token');
+    final String? uid = await SharedPrefUtil.getSharedString('uid');
+    String reversedString = uid!.split('').reversed.join('');
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(reversedString);
+    final Map<String, String> header =
+        urlUtil.getHeaderTypeWithToken(token!, encoded);
+
+    final Map mapData = {};
+    mapData['p_opname_code'] = argumentViewModel.opnameCode;
+    mapData['p_asset_code'] = argumentViewModel.assetCode;
+    a.add(mapData);
+
+    final json = jsonEncode(a);
+
+    try {
+      final res = await http.post(Uri.parse(urlUtil.getUrlOpnameResult()),
+          body: json, headers: header);
+      if (res.statusCode == 200) {
+        opnameResultResponseModel =
+            OpnameResultResponseModel.fromJson(jsonDecode(res.body));
+        return opnameResultResponseModel;
+      } else {
+        opnameResultResponseModel =
+            OpnameResultResponseModel.fromJson(jsonDecode(res.body));
+        throw opnameResultResponseModel.message!;
+      }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
 
   Future<DdlLocationResponseModel> attemptDdlLocation() async {
     List a = [];
@@ -51,6 +92,8 @@ class OpnameSubmitApi {
             DdlLocationResponseModel.fromJson(jsonDecode(res.body));
         throw ddlLocationResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -82,6 +125,8 @@ class OpnameSubmitApi {
         dropDownModel = DropDownModel.fromJson(jsonDecode(res.body));
         throw dropDownModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -115,6 +160,8 @@ class OpnameSubmitApi {
             DdlStatusResponseModel.fromJson(jsonDecode(res.body));
         throw ddlStatusResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -146,6 +193,8 @@ class OpnameSubmitApi {
         dropDownEmployee = DropDownEmployee.fromJson(jsonDecode(res.body));
         throw dropDownEmployee.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -187,6 +236,8 @@ class OpnameSubmitApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -227,6 +278,8 @@ class OpnameSubmitApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }

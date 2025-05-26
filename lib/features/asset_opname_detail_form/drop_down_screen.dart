@@ -14,12 +14,15 @@ import 'package:mobile_so/features/additional_request_detail_form/data/drop_down
 
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_model.dart'
     as pc;
+import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_pic_mutation.dart'
+    as picmut;
 import 'package:mobile_so/features/additional_request_detail_form/data/drop_down_tos_mdel.dart'
     as tos;
 import 'package:mobile_so/features/additional_request_detail_form/domain/repo/dd_repo.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/dd_condition_bloc/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/dd_location_bloc/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/dd_pic_bloc/bloc.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/bloc/dd_pic_mutation_bloc/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/bloc/dd_status_bloc/bloc.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/ddl_location_response_model.dart'
     as loc;
@@ -60,6 +63,8 @@ class _DropDownScreenState extends State<DropDownScreen> {
   DDPicBloc ddPicBloc = DDPicBloc(opnameSubmitRepo: OpnameSubmitRepo());
   DDReasonBloc ddReasonBloc = DDReasonBloc(dropDownRepo: DropDownRepo());
   DDTosBloc ddTosBloc = DDTosBloc(dropDownRepo: DropDownRepo());
+  DDPicMutationBloc ddPicMutationBloc =
+      DDPicMutationBloc(dropDownRepo: DropDownRepo());
 
   List<item.Data> dropDownItemModel = [];
   List<pc.Data> dropDownModel = [];
@@ -79,6 +84,8 @@ class _DropDownScreenState extends State<DropDownScreen> {
   List<pc.Data> dropDownReasonModelTemp = [];
   List<tos.Data> dropDownTosModel = [];
   List<tos.Data> dropDownTosModelTemp = [];
+  List<picmut.Data> dropDownPicMutationModel = [];
+  List<picmut.Data> dropDownPicMutationModelTemp = [];
 
   @override
   void initState() {
@@ -102,6 +109,8 @@ class _DropDownScreenState extends State<DropDownScreen> {
     } else if (widget.ddlRequestScreen.title == 'tos') {
       ddTosBloc
           .add(DDTosAttempt(assetCode: widget.ddlRequestScreen.assetCode!));
+    } else if (widget.ddlRequestScreen.title == 'mutation to') {
+      ddPicMutationBloc.add(DDPicMutationAttempt(action: 'default'));
     } else {
       dDpcBloc.add(const DDpcAttempt(action: 'SGC.2410.00007'));
     }
@@ -142,8 +151,11 @@ class _DropDownScreenState extends State<DropDownScreen> {
                                 ? 'PIC'
                                 : widget.ddlRequestScreen.title == 'tos'
                                     ? 'Type of Service'
-                                    : toBeginningOfSentenceCase(
-                                        widget.ddlRequestScreen.title),
+                                    : widget.ddlRequestScreen.title ==
+                                            'mutation to'
+                                        ? 'Mutation To'
+                                        : toBeginningOfSentenceCase(
+                                            widget.ddlRequestScreen.title),
                     style: TextStyle(
                         fontFamily: GoogleFonts.poppins().fontFamily,
                         fontSize: 20,
@@ -181,15 +193,23 @@ class _DropDownScreenState extends State<DropDownScreen> {
                             .toList();
                       } else if (widget.ddlRequestScreen.title == 'pic') {
                         dropDownPicModelTemp = dropDownPicModel
-                            .where((item) => item.employeeName!
-                                .toUpperCase()
-                                .contains(value.toUpperCase()))
+                            .where((item) =>
+                                item.employeeName!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()) ||
+                                item.nik!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()))
                             .toList();
                       } else if (widget.ddlRequestScreen.title == 'location') {
                         dropDownLocationModelTemp = dropDownLocationModel
-                            .where((item) => item.branchName!
-                                .toUpperCase()
-                                .contains(value.toUpperCase()))
+                            .where((item) =>
+                                item.branchName!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()) ||
+                                item.locationName!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()))
                             .toList();
                       } else if (widget.ddlRequestScreen.title == 'condition') {
                         dropDownConditionModelTemp = dropDownConditionModel
@@ -214,6 +234,17 @@ class _DropDownScreenState extends State<DropDownScreen> {
                             .where((item) => item.description!
                                 .toUpperCase()
                                 .contains(value.toUpperCase()))
+                            .toList();
+                      } else if (widget.ddlRequestScreen.title ==
+                          'mutation to') {
+                        dropDownPicMutationModelTemp = dropDownPicMutationModel
+                            .where((item) =>
+                                item.employeeName!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()) ||
+                                item.nik!
+                                    .toUpperCase()
+                                    .contains(value.toUpperCase()))
                             .toList();
                       } else {
                         dropDownModelTemp = dropDownModel
@@ -243,6 +274,37 @@ class _DropDownScreenState extends State<DropDownScreen> {
           ),
           MultiBlocListener(
             listeners: [
+              BlocListener(
+                bloc: ddPicMutationBloc,
+                listener: (_, DDPicMutationState state) {
+                  if (state is DDPicMutationLoading) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                  }
+                  if (state is DDPicMutationLoaded) {
+                    setState(() {
+                      isLoading = false;
+                      dropDownPicMutationModel =
+                          state.dropDownPicMutation.data!;
+                      dropDownPicMutationModelTemp =
+                          state.dropDownPicMutation.data!;
+                    });
+                  }
+                  if (state is DDPicMutationError) {
+                    GeneralUtil().showSnackBarError(context, state.error!);
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
+                  if (state is DDPicMutationException) {
+                    GeneralUtil().showSnackBarError(context, state.error);
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
+                },
+              ),
               BlocListener(
                 bloc: ddTosBloc,
                 listener: (_, DDTosState state) {
@@ -525,6 +587,7 @@ class _DropDownScreenState extends State<DropDownScreen> {
                         dropDownConditionModelTemp.isEmpty &&
                         dropDownStatusModelTemp.isEmpty &&
                         dropDownPicModelTemp.isEmpty &&
+                        dropDownPicMutationModelTemp.isEmpty &&
                         widget.ddlRequestScreen.title != 'Request' &&
                         widget.ddlRequestScreen.title != 'Reason'
                     ? Container()
@@ -598,23 +661,32 @@ class _DropDownScreenState extends State<DropDownScreen> {
                                                                     .length
                                                             : widget.ddlRequestScreen
                                                                         .title ==
-                                                                    'Request'
-                                                                ? request.length
+                                                                    'mutation to'
+                                                                ? dropDownPicMutationModelTemp
+                                                                        .isNotEmpty
+                                                                    ? dropDownPicMutationModelTemp
+                                                                        .length
+                                                                    : dropDownPicMutationModel
+                                                                        .length
                                                                 : widget.ddlRequestScreen
                                                                             .title ==
-                                                                        'Reason'
-                                                                    ? reason
+                                                                        'Request'
+                                                                    ? request
                                                                         .length
                                                                     : widget.ddlRequestScreen.title ==
-                                                                            'tos'
-                                                                        ? dropDownTosModelTemp
-                                                                                .isNotEmpty
+                                                                            'Reason'
+                                                                        ? reason
+                                                                            .length
+                                                                        : widget.ddlRequestScreen.title ==
+                                                                                'tos'
                                                                             ? dropDownTosModelTemp
-                                                                                .length
-                                                                            : dropDownTosModel
-                                                                                .length
-                                                                        : status
-                                                                            .length,
+                                                                                    .isNotEmpty
+                                                                                ? dropDownTosModelTemp
+                                                                                    .length
+                                                                                : dropDownTosModel
+                                                                                    .length
+                                                                            : status
+                                                                                .length,
                             padding: const EdgeInsets.only(
                                 left: 24.0, right: 24.0, bottom: 16, top: 16),
                             shrinkWrap: true,
@@ -678,15 +750,19 @@ class _DropDownScreenState extends State<DropDownScreen> {
                                                                     ? dropDownPicModelTemp.isNotEmpty
                                                                         ? dropDownPicModelTemp[index].employeeName
                                                                         : dropDownPicModel[index].employeeName
-                                                                    : widget.ddlRequestScreen.title == 'Request'
-                                                                        ? request[index]
-                                                                        : widget.ddlRequestScreen.title == 'Reason'
-                                                                            ? reason[index]
-                                                                            : widget.ddlRequestScreen.title == 'tos'
-                                                                                ? dropDownTosModelTemp.isNotEmpty
-                                                                                    ? dropDownTosModelTemp[index].description
-                                                                                    : dropDownTosModel[index].description!
-                                                                                : status[index],
+                                                                    : widget.ddlRequestScreen.title == 'mutation to'
+                                                                        ? dropDownPicMutationModelTemp.isNotEmpty
+                                                                            ? '${dropDownPicMutationModelTemp[index].employeeName}-${dropDownPicMutationModelTemp[index].nik}'
+                                                                            : '${dropDownPicMutationModelTemp[index].employeeName}-${dropDownPicMutationModelTemp[index].nik}'
+                                                                        : widget.ddlRequestScreen.title == 'Request'
+                                                                            ? request[index]
+                                                                            : widget.ddlRequestScreen.title == 'Reason'
+                                                                                ? reason[index]
+                                                                                : widget.ddlRequestScreen.title == 'tos'
+                                                                                    ? dropDownTosModelTemp.isNotEmpty
+                                                                                        ? dropDownTosModelTemp[index].description
+                                                                                        : dropDownTosModel[index].description!
+                                                                                    : status[index],
                                     'code': widget.ddlRequestScreen.title ==
                                             'item'
                                         ? dropDownItemModelTemp.isNotEmpty
@@ -743,11 +819,15 @@ class _DropDownScreenState extends State<DropDownScreen> {
                                                                     ? dropDownPicModelTemp.isNotEmpty
                                                                         ? dropDownPicModelTemp[index].employeeCode
                                                                         : dropDownPicModel[index].employeeCode
-                                                                    : widget.ddlRequestScreen.title == 'tos'
-                                                                        ? dropDownTosModelTemp.isNotEmpty
-                                                                            ? dropDownTosModelTemp[index].serviceCode
-                                                                            : dropDownTosModel[index].serviceCode!
-                                                                        : ''
+                                                                    : widget.ddlRequestScreen.title == 'mutation to'
+                                                                        ? dropDownPicMutationModelTemp.isNotEmpty
+                                                                            ? dropDownPicMutationModelTemp[index].employeeCode
+                                                                            : dropDownPicMutationModel[index].employeeCode
+                                                                        : widget.ddlRequestScreen.title == 'tos'
+                                                                            ? dropDownTosModelTemp.isNotEmpty
+                                                                                ? dropDownTosModelTemp[index].serviceCode
+                                                                                : dropDownTosModel[index].serviceCode!
+                                                                            : ''
                                   });
                                 },
                                 child: Text(
@@ -814,15 +894,19 @@ class _DropDownScreenState extends State<DropDownScreen> {
                                                                       : dropDownPicModel[index]
                                                                           .employeeName!
                                                                   : widget.ddlRequestScreen.title ==
-                                                                          'Request'
-                                                                      ? request[index]
-                                                                      : widget.ddlRequestScreen.title == 'Reason'
-                                                                          ? reason[index]
-                                                                          : widget.ddlRequestScreen.title == 'tos'
-                                                                              ? dropDownTosModelTemp.isNotEmpty
-                                                                                  ? dropDownTosModelTemp[index].description!
-                                                                                  : dropDownTosModel[index].description!
-                                                                              : status[index],
+                                                                          'mutation to'
+                                                                      ? dropDownPicMutationModelTemp.isNotEmpty
+                                                                          ? '${dropDownPicMutationModelTemp[index].nik!}-${dropDownPicMutationModelTemp[index].employeeName!}'
+                                                                          : '${dropDownPicMutationModelTemp[index].nik!}-${dropDownPicMutationModelTemp[index].employeeName!}'
+                                                                      : widget.ddlRequestScreen.title == 'Request'
+                                                                          ? request[index]
+                                                                          : widget.ddlRequestScreen.title == 'Reason'
+                                                                              ? reason[index]
+                                                                              : widget.ddlRequestScreen.title == 'tos'
+                                                                                  ? dropDownTosModelTemp.isNotEmpty
+                                                                                      ? dropDownTosModelTemp[index].description!
+                                                                                      : dropDownTosModel[index].description!
+                                                                                  : status[index],
                                   style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,

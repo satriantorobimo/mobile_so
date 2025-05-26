@@ -46,6 +46,8 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -85,6 +87,8 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -125,6 +129,8 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -165,6 +171,49 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
+
+  Future<GeneralResponseModel> attemptSubmitAdditionalMutation(
+      SubmitRequestModel submitRequestModel) async {
+    List a = [];
+    final String? token = await SharedPrefUtil.getSharedString('token');
+    final String? uid = await SharedPrefUtil.getSharedString('uid');
+    String reversedString = uid!.split('').reversed.join('');
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(reversedString);
+    final Map<String, String> header =
+        urlUtil.getHeaderTypeWithToken(token!, encoded);
+
+    final Map mapData = {};
+    mapData['p_asset_code'] = submitRequestModel.pAssetCode;
+    mapData['p_request_process_to_code'] =
+        submitRequestModel.pRequestProcessToCode;
+    mapData['p_pic_code'] = submitRequestModel.pPicCode;
+    mapData['p_remarks_mobile'] = submitRequestModel.pRemarksMobile;
+
+    a.add(mapData);
+
+    final json = jsonEncode(a);
+
+    try {
+      final res = await http.post(Uri.parse(urlUtil.getUrlSubmitAdditional()),
+          body: json, headers: header);
+      if (res.statusCode == 200) {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        return generalResponseModel;
+      } else {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        throw generalResponseModel.message!;
+      }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -204,6 +253,8 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -246,6 +297,8 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -275,8 +328,50 @@ class SubmitAddReqApi {
     final json = jsonEncode(a);
 
     try {
+      final res = await http.post(Uri.parse(urlUtil.getUrlUploadDocSellReq()),
+          body: json, headers: header);
+      if (res.statusCode == 200) {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        return generalResponseModel;
+      } else {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        throw generalResponseModel.message!;
+      }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
+
+  Future<GeneralResponseModel> attemptUploadMutation(
+      UploadDocRequestModel uploadDocRequestModel, String opnameCode) async {
+    List a = [];
+    final String? token = await SharedPrefUtil.getSharedString('token');
+    final String? uid = await SharedPrefUtil.getSharedString('uid');
+    String reversedString = uid!.split('').reversed.join('');
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(reversedString);
+    final Map<String, String> header =
+        urlUtil.getHeaderTypeWithToken(token!, encoded);
+    File file = File(uploadDocRequestModel.filePath!);
+    Uint8List bytes = file.readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+    final Map mapData = {};
+    mapData['p_additional_request_mutation_code'] = opnameCode;
+    mapData['p_asset_code'] = uploadDocRequestModel.pAssetRegisterCode;
+    mapData['p_file_name'] = uploadDocRequestModel.pFileName;
+    mapData['p_base64'] = base64Image;
+
+    a.add(mapData);
+
+    final json = jsonEncode(a);
+
+    try {
       final res = await http.post(
-          Uri.parse(urlUtil.getUrlUploadDocDisposalReq()),
+          Uri.parse(urlUtil.getUrlUploadDocMutationReq()),
           body: json,
           headers: header);
       if (res.statusCode == 200) {
@@ -288,6 +383,52 @@ class SubmitAddReqApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
+    } catch (ex) {
+      throw ex.toString();
+    }
+  }
+
+  Future<GeneralResponseModel> attemptUploadMaintenance(
+      UploadDocRequestModel uploadDocRequestModel, String opnameCode) async {
+    List a = [];
+    final String? token = await SharedPrefUtil.getSharedString('token');
+    final String? uid = await SharedPrefUtil.getSharedString('uid');
+    String reversedString = uid!.split('').reversed.join('');
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(reversedString);
+    final Map<String, String> header =
+        urlUtil.getHeaderTypeWithToken(token!, encoded);
+    File file = File(uploadDocRequestModel.filePath!);
+    Uint8List bytes = file.readAsBytesSync();
+    String base64Image = base64Encode(bytes);
+    final Map mapData = {};
+    mapData['p_additional_request_maintenance_code'] = opnameCode;
+    mapData['p_asset_code'] = uploadDocRequestModel.pAssetRegisterCode;
+    mapData['p_file_name'] = uploadDocRequestModel.pFileName;
+    mapData['p_base64'] = base64Image;
+
+    a.add(mapData);
+
+    final json = jsonEncode(a);
+
+    try {
+      final res = await http.post(
+          Uri.parse(urlUtil.getUrlUploadDocMaintenanceReq()),
+          body: json,
+          headers: header);
+      if (res.statusCode == 200) {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        return generalResponseModel;
+      } else {
+        generalResponseModel =
+            GeneralResponseModel.fromJson(jsonDecode(res.body));
+        throw generalResponseModel.message!;
+      }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }

@@ -15,5 +15,7 @@ class AdditionalRequestListRepo {
       additionalRequestListApi.attemptAdditionalDisposal();
 
   Future<AdditionalRequestListResponseModel?> attemptAdditionalMaintenance() =>
-      additionalRequestListApi.attemptAdditionalDisposal();
+      additionalRequestListApi.attemptAdditionalMaintenance();
+  Future<AdditionalRequestListResponseModel?> attemptAdditionalMutation() =>
+      additionalRequestListApi.attemptAdditionalMutation();
 }

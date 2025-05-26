@@ -58,6 +58,8 @@ class _AdditionalRequestDetailFormScreenState
   double cardRadius = 40.0;
   String selectedLocation = '';
   String selectedLocationCode = '';
+  String selectedMutation = '';
+  String selectedMutationCode = '';
   String selectedPurchaseCondition = '';
   String selectedStatus = '';
   String selectedReason = '';
@@ -67,8 +69,10 @@ class _AdditionalRequestDetailFormScreenState
   String selectRequest = '';
   String itemCode = '';
   String picCode = '';
+  String picName = '';
   String name = '';
   String uid = '';
+  String assetName = '';
   bool isLoading = false;
   bool isSubmit = false;
   String assetCode = '';
@@ -95,13 +99,13 @@ class _AdditionalRequestDetailFormScreenState
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 24.0, left: 16, right: 16),
                   child: Text(
                     'Select Options',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 18,
+                        fontSize: GeneralUtil.fontSize(context) * 0.55,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -119,11 +123,11 @@ class _AdditionalRequestDetailFormScreenState
                           Navigator.pop(context);
                         });
                       },
-                      child: const Text(
+                      child: Text(
                         'Gallery',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 18,
+                            fontSize: GeneralUtil.fontSize(context) * 0.55,
                             fontWeight: FontWeight.w400),
                       ),
                     )),
@@ -140,11 +144,11 @@ class _AdditionalRequestDetailFormScreenState
                           Navigator.pop(context);
                         });
                       },
-                      child: const Text(
+                      child: Text(
                         'File Explorer',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 18,
+                            fontSize: GeneralUtil.fontSize(context) * 0.55,
                             fontWeight: FontWeight.w400),
                       ),
                     )),
@@ -159,7 +163,7 @@ class _AdditionalRequestDetailFormScreenState
   void initState() {
     super.initState();
     _priceCtrl.addListener(_formatSellTextField);
-
+    log('${widget.argumentAddReq}');
     getUserData();
   }
 
@@ -188,6 +192,10 @@ class _AdditionalRequestDetailFormScreenState
     } else if (widget.argumentAddReq.maintenance) {
       setState(() {
         selectRequest = 'Maintenance';
+      });
+    } else if (widget.argumentAddReq.mutation) {
+      setState(() {
+        selectRequest = 'Mutation';
       });
     } else {
       setState(() {
@@ -305,7 +313,7 @@ class _AdditionalRequestDetailFormScreenState
               Text('Additional Request',
                   style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      fontSize: 20,
+                      fontSize: GeneralUtil.fontSize(context) * 0.6,
                       color: Colors.white)),
             ],
           ),
@@ -324,8 +332,8 @@ class _AdditionalRequestDetailFormScreenState
                         Row(
                           children: [
                             SizedBox(
-                              width: 100,
-                              height: 100,
+                              width: MediaQuery.of(context).size.width * 0.23,
+                              height: MediaQuery.of(context).size.width * 0.23,
                               child: PrettyQrView.data(
                                   data: widget.argumentAddReq
                                       .assetGrowResponseModel.data![0].barcode!,
@@ -346,7 +354,8 @@ class _AdditionalRequestDetailFormScreenState
                                     widget.argumentAddReq.assetGrowResponseModel
                                         .data![0].itemName!,
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) * 0.5,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -355,53 +364,42 @@ class _AdditionalRequestDetailFormScreenState
                                   widget.argumentAddReq.assetGrowResponseModel
                                       .data![0].code!,
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
                                 ),
                                 Text(
                                   '${widget.argumentAddReq.assetGrowResponseModel.data![0].status!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].condition!}',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
-                                          0.17,
+                                          0.165,
                                       child: Text(
                                         'Location : ',
                                         style: TextStyle(
-                                            fontSize: 14, color: Colors.white),
+                                            fontSize:
+                                                GeneralUtil.fontSize(context) *
+                                                    0.45,
+                                            color: Colors.white),
                                       ),
                                     ),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.4,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget
-                                                .argumentAddReq
-                                                .assetGrowResponseModel
-                                                .data![0]
-                                                .branchName!,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white),
-                                          ),
-                                          Text(
-                                            widget
-                                                .argumentAddReq
-                                                .assetGrowResponseModel
-                                                .data![0]
-                                                .locationName!,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white),
-                                          ),
-                                        ],
+                                      child: Text(
+                                        '${widget.argumentAddReq.assetGrowResponseModel.data![0].branchName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].locationName!}',
+                                        style: TextStyle(
+                                            fontSize:
+                                                GeneralUtil.fontSize(context) *
+                                                    0.45,
+                                            color: Colors.white),
                                       ),
                                     ),
                                   ],
@@ -411,7 +409,7 @@ class _AdditionalRequestDetailFormScreenState
                                   children: [
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
-                                          0.1,
+                                          0.08,
                                       child: Text(
                                         'PIC : ',
                                         style: TextStyle(
@@ -428,7 +426,10 @@ class _AdditionalRequestDetailFormScreenState
                                             .data![0]
                                             .picName!,
                                         style: TextStyle(
-                                            fontSize: 14, color: Colors.white),
+                                            fontSize:
+                                                GeneralUtil.fontSize(context) *
+                                                    0.45,
+                                            color: Colors.white),
                                       ),
                                     ),
                                   ],
@@ -452,7 +453,9 @@ class _AdditionalRequestDetailFormScreenState
                                       .argumentAddReq
                                       .assetGrowResponseModel
                                       .data![0]
-                                      .longitude!));
+                                      .longitude!),
+                                  widget.argumentAddReq.assetGrowResponseModel
+                                      .data![0].locationName!);
                             },
                             child: Image.asset(
                               'assets/imgs/map.png',
@@ -465,11 +468,14 @@ class _AdditionalRequestDetailFormScreenState
               const SizedBox(
                 height: 32,
               ),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Request Process To',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: GeneralUtil.fontSize(context) * 0.55,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
               const SizedBox(
@@ -488,7 +494,7 @@ class _AdditionalRequestDetailFormScreenState
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: GoogleFonts.poppins().fontFamily,
-                    fontSize: 16,
+                    fontSize: GeneralUtil.fontSize(context) * 0.5,
                   ),
                 ),
               ),
@@ -503,7 +509,9 @@ class _AdditionalRequestDetailFormScreenState
                           ? formDisposal()
                           : selectRequest == 'Maintenance'
                               ? formMaintenance()
-                              : Container(),
+                              : selectRequest == 'Mutation'
+                                  ? formMutation()
+                                  : Container(),
               GestureDetector(
                 onTap: () {
                   _showBottomAttachment(context);
@@ -570,11 +578,17 @@ class _AdditionalRequestDetailFormScreenState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(attachmentList[index].fileName,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                child: Text(attachmentList[index].fileName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) *
+                                                0.45,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
+                              ),
                               Row(
                                 children: [
                                   attachmentList[index].fileType == '.pdf' ||
@@ -669,10 +683,10 @@ class _AdditionalRequestDetailFormScreenState
                             tileMode: TileMode.clamp),
                         borderRadius: BorderRadius.circular(28),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text('Cancel',
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: GeneralUtil.fontSize(context) * 0.55,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600)),
                       ),
@@ -690,10 +704,10 @@ class _AdditionalRequestDetailFormScreenState
                             });
                           }
                           if (state is SubmitAddReqLoaded) {
+                            setState(() {
+                              assetCode = state.generalResponseModel.code!;
+                            });
                             if (widget.argumentAddReq.register) {
-                              setState(() {
-                                assetCode = state.generalResponseModel.code!;
-                              });
                               uploadDocReqBloc.add(UploadDocReqAttempt(
                                   uploadDocRequestModel: UploadDocRequestModel(
                                       pAssetRegisterCode: assetCode,
@@ -702,18 +716,66 @@ class _AdditionalRequestDetailFormScreenState
                                       pFileName:
                                           attachmentList[counter].fileName)));
                             } else {
-                              setState(() {
-                                assetCode = state.generalResponseModel.code!;
-                              });
-                              uploadDocReqBloc.add(UploadDocDisposalAttempt(
-                                  opnameCode: assetCode,
-                                  uploadDocRequestModel: UploadDocRequestModel(
-                                      pAssetRegisterCode: widget.argumentAddReq
-                                          .assetGrowResponseModel.data![0].code,
-                                      filePath:
-                                          attachmentList[counter].filePath,
-                                      pFileName:
-                                          attachmentList[counter].fileName)));
+                              if (selectRequest == 'Mutation') {
+                                uploadDocReqBloc.add(UploadDocMutaionAttempt(
+                                    opnameCode: assetCode,
+                                    uploadDocRequestModel:
+                                        UploadDocRequestModel(
+                                            pAssetRegisterCode: widget
+                                                .argumentAddReq
+                                                .assetGrowResponseModel
+                                                .data![0]
+                                                .code,
+                                            filePath: attachmentList[counter]
+                                                .filePath,
+                                            pFileName: attachmentList[counter]
+                                                .fileName)));
+                              } else if (selectRequest == 'Sell') {
+                                uploadDocReqBloc.add(UploadDocSellAttempt(
+                                    opnameCode: assetCode,
+                                    uploadDocRequestModel:
+                                        UploadDocRequestModel(
+                                            pAssetRegisterCode: widget
+                                                .argumentAddReq
+                                                .assetGrowResponseModel
+                                                .data![0]
+                                                .code,
+                                            filePath: attachmentList[counter]
+                                                .filePath,
+                                            pFileName: attachmentList[counter]
+                                                .fileName)));
+                              } else if (selectRequest == 'Maintenance') {
+                                uploadDocReqBloc.add(
+                                    UploadDocMaintenanceAttempt(
+                                        opnameCode: assetCode,
+                                        uploadDocRequestModel:
+                                            UploadDocRequestModel(
+                                                pAssetRegisterCode: widget
+                                                    .argumentAddReq
+                                                    .assetGrowResponseModel
+                                                    .data![0]
+                                                    .code,
+                                                filePath:
+                                                    attachmentList[counter]
+                                                        .filePath,
+                                                pFileName:
+                                                    attachmentList[counter]
+                                                        .fileName)));
+                              } else {
+                                uploadDocReqBloc.add(UploadDocDisposalAttempt(
+                                    opnameCode: assetCode,
+                                    uploadDocRequestModel:
+                                        UploadDocRequestModel(
+                                            pAssetRegisterCode: widget
+                                                .argumentAddReq
+                                                .assetGrowResponseModel
+                                                .data![0]
+                                                .code,
+                                            filePath: attachmentList[counter]
+                                                .filePath,
+                                            pFileName: attachmentList[counter]
+                                                .fileName)));
+                              }
                             }
                           }
                           if (state is SubmitAddReqError) {
@@ -768,19 +830,66 @@ class _AdditionalRequestDetailFormScreenState
                                             pFileName: attachmentList[counter]
                                                 .fileName)));
                               } else {
-                                uploadDocReqBloc.add(UploadDocDisposalAttempt(
-                                    opnameCode: assetCode,
-                                    uploadDocRequestModel:
-                                        UploadDocRequestModel(
-                                            pAssetRegisterCode: widget
-                                                .argumentAddReq
-                                                .assetGrowResponseModel
-                                                .data![0]
-                                                .code,
-                                            filePath: attachmentList[counter]
-                                                .filePath,
-                                            pFileName: attachmentList[counter]
-                                                .fileName)));
+                                if (selectRequest == 'Mutation') {
+                                  uploadDocReqBloc.add(UploadDocMutaionAttempt(
+                                      opnameCode: assetCode,
+                                      uploadDocRequestModel:
+                                          UploadDocRequestModel(
+                                              pAssetRegisterCode: widget
+                                                  .argumentAddReq
+                                                  .assetGrowResponseModel
+                                                  .data![0]
+                                                  .code,
+                                              filePath: attachmentList[counter]
+                                                  .filePath,
+                                              pFileName: attachmentList[counter]
+                                                  .fileName)));
+                                } else if (selectRequest == 'Sell') {
+                                  uploadDocReqBloc.add(UploadDocSellAttempt(
+                                      opnameCode: assetCode,
+                                      uploadDocRequestModel:
+                                          UploadDocRequestModel(
+                                              pAssetRegisterCode: widget
+                                                  .argumentAddReq
+                                                  .assetGrowResponseModel
+                                                  .data![0]
+                                                  .code,
+                                              filePath: attachmentList[counter]
+                                                  .filePath,
+                                              pFileName: attachmentList[counter]
+                                                  .fileName)));
+                                } else if (selectRequest == 'Maintenance') {
+                                  uploadDocReqBloc.add(
+                                      UploadDocMaintenanceAttempt(
+                                          opnameCode: assetCode,
+                                          uploadDocRequestModel:
+                                              UploadDocRequestModel(
+                                                  pAssetRegisterCode: widget
+                                                      .argumentAddReq
+                                                      .assetGrowResponseModel
+                                                      .data![0]
+                                                      .code,
+                                                  filePath:
+                                                      attachmentList[counter]
+                                                          .filePath,
+                                                  pFileName:
+                                                      attachmentList[counter]
+                                                          .fileName)));
+                                } else {
+                                  uploadDocReqBloc.add(UploadDocDisposalAttempt(
+                                      opnameCode: assetCode,
+                                      uploadDocRequestModel:
+                                          UploadDocRequestModel(
+                                              pAssetRegisterCode: widget
+                                                  .argumentAddReq
+                                                  .assetGrowResponseModel
+                                                  .data![0]
+                                                  .code,
+                                              filePath: attachmentList[counter]
+                                                  .filePath,
+                                              pFileName: attachmentList[counter]
+                                                  .fileName)));
+                                }
                               }
                             } else {
                               setState(() {
@@ -929,6 +1038,34 @@ class _AdditionalRequestDetailFormScreenState
                                                     pRemarksMobile:
                                                         _remarksCtrl.text)));
                                       }
+                                    } else if (selectRequest == 'Mutation') {
+                                      if (selectRequest == '' ||
+                                          selectedMutation == '' ||
+                                          selectedMutationCode == '' ||
+                                          _remarksCtrl.text == '' ||
+                                          _remarksCtrl.text.isEmpty ||
+                                          attachmentList.isEmpty) {
+                                        GeneralUtil().showSnackBarError(context,
+                                            'Required field cannot be empty');
+                                      } else {
+                                        submitAddReqBloc.add(
+                                            SubmitAdditionalMutationAttempt(
+                                                submitRequestModel:
+                                                    SubmitRequestModel(
+                                                        pAssetCode: widget
+                                                            .argumentAddReq
+                                                            .assetGrowResponseModel
+                                                            .data![0]
+                                                            .code,
+                                                        pRequestProcessToCode:
+                                                            selectRequest
+                                                                .toUpperCase(),
+                                                        pPicCode:
+                                                            selectedMutationCode,
+                                                        pRemarksMobile:
+                                                            _remarksCtrl
+                                                                .text)));
+                                      }
                                     } else {
                                       if (selectRequest == '' ||
                                           selectedReasonCode == '' ||
@@ -975,10 +1112,12 @@ class _AdditionalRequestDetailFormScreenState
                                     tileMode: TileMode.clamp),
                                 borderRadius: BorderRadius.circular(28),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text('Submit',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) *
+                                                0.55,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600)),
                               ),
@@ -997,11 +1136,14 @@ class _AdditionalRequestDetailFormScreenState
   Widget formSell() {
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Reason',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            'Reason *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1040,7 +1182,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
                     : Text(
@@ -1048,7 +1190,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
                 Container(
@@ -1067,11 +1209,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Net Book Value',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1093,18 +1238,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Selling Price *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1113,7 +1261,10 @@ class _AdditionalRequestDetailFormScreenState
         TextFormField(
           controller: _priceCtrl,
           keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(18),
+          ],
           style: const TextStyle(color: Colors.white),
           onChanged: (val) {
             log(_tempValue.toString());
@@ -1137,7 +1288,7 @@ class _AdditionalRequestDetailFormScreenState
                 fontWeight: FontWeight.bold,
               ),
             ),
-            hintText: "0",
+            hintText: "0,00",
             contentPadding: EdgeInsets.only(bottom: 16),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Color(0xFFE6E7E8)),
@@ -1150,11 +1301,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Gain / Loss',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1173,18 +1327,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: gainloss < 0 ? Colors.red : Colors.green,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1219,72 +1376,82 @@ class _AdditionalRequestDetailFormScreenState
   Widget formRegister() {
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Item *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
           height: 8,
         ),
-        Stack(
-          children: [
-            TextFormField(
-              controller: _assetNameCtrl,
-              readOnly: true,
-              style: const TextStyle(color: Colors.white),
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.only(bottom: 16),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE6E7E8)),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE6E7E8)),
-                ),
-              ),
+        Container(
+          width: double.infinity,
+          height: 45,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: GestureDetector(
-                onTap: () async {
-                  final result = await Navigator.pushNamed(
-                      context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: DdlRequestScreen(
-                          title: 'item',
-                          source: selectRequest,
-                          assetCode: widget.argumentAddReq
-                              .assetGrowResponseModel.data![0].code));
-
-                  if (result != null && result is Map<String, dynamic>) {
-                    setState(() {
-                      _assetNameCtrl.text = result['value']!;
-                      itemCode = result['code']!;
-                    });
-                  }
-                },
-                child: const Icon(
-                  Icons.search,
-                  size: 32,
-                  color: Color(0xFFE6E7E8),
+          ),
+          child: Stack(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: Text(
+                  assetName,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
+                    fontSize: GeneralUtil.fontSize(context) * 0.45,
+                  ),
                 ),
               ),
-            )
-          ],
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                        context, StringRouterUtil.dropDownScreenRoute,
+                        arguments: DdlRequestScreen(
+                            title: 'item',
+                            source: selectRequest,
+                            assetCode: ''));
+
+                    if (result != null && result is Map<String, dynamic>) {
+                      setState(() {
+                        _assetNameCtrl.text = result['value']!;
+                        assetName = result['value']!;
+                        itemCode = result['code']!;
+                      });
+                    }
+                  },
+                  child: const Icon(
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Purchase Condition *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1295,10 +1462,7 @@ class _AdditionalRequestDetailFormScreenState
             final result = await Navigator.pushNamed(
                 context, StringRouterUtil.dropDownScreenRoute,
                 arguments: DdlRequestScreen(
-                    title: 'pc',
-                    source: selectRequest,
-                    assetCode: widget
-                        .argumentAddReq.assetGrowResponseModel.data![0].code));
+                    title: 'pc', source: selectRequest, assetCode: ''));
             log(result.toString());
             if (result != null && result is Map<String, dynamic>) {
               setState(() {
@@ -1323,7 +1487,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
                     : Text(
@@ -1331,7 +1495,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
                 Container(
@@ -1350,72 +1514,82 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'PIC',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
           height: 8,
         ),
-        Stack(
-          children: [
-            TextFormField(
-              controller: _picCtrl,
-              style: const TextStyle(color: Colors.white),
-              readOnly: true,
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.only(bottom: 16),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE6E7E8)),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE6E7E8)),
-                ),
-              ),
+        Container(
+          width: double.infinity,
+          height: 45,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: GestureDetector(
-                onTap: () async {
-                  final result = await Navigator.pushNamed(
-                      context, StringRouterUtil.dropDownScreenRoute,
-                      arguments: DdlRequestScreen(
-                          title: 'employee',
-                          source: selectRequest,
-                          assetCode: widget.argumentAddReq
-                              .assetGrowResponseModel.data![0].code));
-
-                  if (result != null && result is Map<String, dynamic>) {
-                    setState(() {
-                      _picCtrl.text = result['value']!;
-                      picCode = result['code']!;
-                    });
-                  }
-                },
-                child: const Icon(
-                  Icons.search,
-                  size: 32,
-                  color: Color(0xFFE6E7E8),
+          ),
+          child: Stack(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: Text(
+                  picName,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: GoogleFonts.poppins().fontFamily,
+                    fontSize: GeneralUtil.fontSize(context) * 0.45,
+                  ),
                 ),
               ),
-            )
-          ],
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                        context, StringRouterUtil.dropDownScreenRoute,
+                        arguments: DdlRequestScreen(
+                            title: 'employee',
+                            source: selectRequest,
+                            assetCode: ''));
+
+                    if (result != null && result is Map<String, dynamic>) {
+                      setState(() {
+                        _picCtrl.text = result['value']!;
+                        picName = result['value']!;
+                        picCode = result['code']!;
+                      });
+                    }
+                  },
+                  child: const Icon(
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1450,11 +1624,14 @@ class _AdditionalRequestDetailFormScreenState
   Widget formDisposal() {
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Reason *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1496,7 +1673,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
                     : Text(
@@ -1504,7 +1681,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
                 Container(
@@ -1523,11 +1700,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Purchase Price',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1549,18 +1729,20 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Total Depre. Comm.',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1582,18 +1764,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Net Book Value',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1615,18 +1800,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Requestor',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1634,7 +1822,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 10),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1645,18 +1833,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1691,11 +1882,14 @@ class _AdditionalRequestDetailFormScreenState
   Widget formMaintenance() {
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Asset Name',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1713,18 +1907,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Serial No',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1743,18 +1940,21 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Location',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1778,7 +1978,6 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
-            height: 45,
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1793,15 +1992,18 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
-                    : Text(
-                        selectedLocation,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          selectedLocation,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: GeneralUtil.fontSize(context) * 0.45,
+                          ),
                         ),
                       ),
                 Container(
@@ -1820,11 +2022,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Maintenance By',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            'Maintenance By *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1873,11 +2078,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Type of Service',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            'Type of Service *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1902,7 +2110,6 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
-            height: 45,
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1917,15 +2124,18 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
-                    : Text(
-                        selectedType,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          selectedType,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: GeneralUtil.fontSize(context) * 0.45,
+                          ),
                         ),
                       ),
                 Container(
@@ -1944,11 +2154,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Requestor',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -1956,7 +2169,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 10),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1967,18 +2180,237 @@ class _AdditionalRequestDetailFormScreenState
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
-              fontSize: 16,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
             ),
           ),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _remarksCtrl,
+          maxLength: 500,
+          minLines: 3,
+          maxLines: 10,
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+            counterStyle: TextStyle(color: Color(0xFFE6E7E8)),
+            isDense: true,
+            contentPadding: EdgeInsets.only(bottom: 16),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE6E7E8)),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE6E7E8)),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 32,
+        ),
+      ],
+    );
+  }
+
+  Widget formMutation() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Asset Name',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+            ),
+          ),
+          child: Text(
+            widget.argumentAddReq.assetGrowResponseModel.data![0].itemName!,
+            style: TextStyle(
+              color: Colors.grey,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'FA Type & Category',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+            ),
+          ),
+          child: Text(
+            '${widget.argumentAddReq.assetGrowResponseModel.data![0].typeAndCategoryName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].categoryName!}',
+            style: TextStyle(
+              color: Colors.grey,
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Mutation Type',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+            ),
+          ),
+          child: Text(
+            'To PIC',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontFamily: GoogleFonts.poppins().fontFamily,
+              fontSize: GeneralUtil.fontSize(context) * 0.45,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Mutation To *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        GestureDetector(
+          onTap: () async {
+            final result = await Navigator.pushNamed(
+                context, StringRouterUtil.dropDownScreenRoute,
+                arguments: DdlRequestScreen(
+                    title: 'mutation to',
+                    source: selectRequest,
+                    assetCode: widget
+                        .argumentAddReq.assetGrowResponseModel.data![0].code));
+            if (result != null && result is Map<String, dynamic>) {
+              setState(() {
+                selectedMutation = result['value']!;
+                selectedMutationCode = result['code']!;
+              });
+            }
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                selectedMutation == ''
+                    ? Text(
+                        'Select Mutation To',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontFamily: GoogleFonts.poppins().fontFamily,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
+                        ),
+                      )
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          selectedMutation,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontSize: GeneralUtil.fontSize(context) * 0.45,
+                          ),
+                        ),
+                      ),
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: const Icon(
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Remarks *',
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2013,11 +2445,14 @@ class _AdditionalRequestDetailFormScreenState
   Widget mainContent() {
     return Column(
       children: [
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Condition',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2057,7 +2492,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
                     : Text(
@@ -2065,7 +2500,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
                 Container(
@@ -2084,11 +2519,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Status',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2128,7 +2566,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
                     : Text(
@@ -2136,7 +2574,7 @@ class _AdditionalRequestDetailFormScreenState
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: 16,
+                          fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
                 Container(
@@ -2155,11 +2593,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'PIC',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2183,11 +2624,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Remarks *',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2215,11 +2659,14 @@ class _AdditionalRequestDetailFormScreenState
         const SizedBox(
           height: 16,
         ),
-        const Align(
+        Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Opname Location',
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontSize: GeneralUtil.fontSize(context) * 0.55,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         const SizedBox(
@@ -2235,16 +2682,27 @@ class _AdditionalRequestDetailFormScreenState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Row(
                 children: [
                   Text(
                     'Longitude  : ${widget.argumentAddReq.assetGrowResponseModel.data![0].longitude}',
-                    style: TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
+                    style: TextStyle(
+                        fontSize: GeneralUtil.fontSize(context) * 0.45,
+                        color: Color(0xFFBFBFBF)),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(width: 4),
+                  Text(
+                    '||',
+                    style: TextStyle(
+                        fontSize: GeneralUtil.fontSize(context) * 0.45,
+                        color: Color(0xFFBFBFBF)),
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     'Latitude     : ${widget.argumentAddReq.assetGrowResponseModel.data![0].latitude}',
-                    style: TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
+                    style: TextStyle(
+                        fontSize: GeneralUtil.fontSize(context) * 0.45,
+                        color: Color(0xFFBFBFBF)),
                   ),
                 ],
               ),
@@ -2254,7 +2712,9 @@ class _AdditionalRequestDetailFormScreenState
                       double.parse(widget.argumentAddReq.assetGrowResponseModel
                           .data![0].latitude!),
                       double.parse(widget.argumentAddReq.assetGrowResponseModel
-                          .data![0].longitude!));
+                          .data![0].longitude!),
+                      widget.argumentAddReq.assetGrowResponseModel.data![0]
+                          .locationName!);
                 },
                 child: Image.asset(
                   'assets/imgs/map.png',

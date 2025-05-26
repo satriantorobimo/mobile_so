@@ -1,15 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/argument_add_request.dart';
 import 'package:mobile_so/features/asset_opname_detail/content_data_widget.dart';
 import 'package:mobile_so/features/asset_opname_detail/data/arguments_asset_grow.dart';
 import 'package:mobile_so/features/asset_opname_detail/data/data_content.dart';
+import 'package:mobile_so/features/asset_opname_detail/domain/repo/asset_grow_repo.dart';
 import 'package:mobile_so/features/navbar/navbar_provider.dart';
+import 'package:mobile_so/utility/general_util.dart';
 import 'package:mobile_so/utility/map_util.dart';
+import 'package:mobile_so/utility/shared_pref_util.dart';
 import 'package:mobile_so/utility/string_router_util.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
+
+import '../asset_opname_detail/bloc/print/bloc.dart';
 
 class AdditionalRequestDetailScreen extends StatefulWidget {
   const AdditionalRequestDetailScreen(
@@ -25,7 +31,7 @@ class _AdditionalRequestDetailScreenState
     extends State<AdditionalRequestDetailScreen> {
   List<DataContent> dataContent = [];
   double rating = 0.0;
-
+  PrintBloc printBloc = PrintBloc(assetGrowRepo: AssetGrowRepo());
   @override
   void initState() {
     setState(() {
@@ -1474,7 +1480,7 @@ class _AdditionalRequestDetailScreenState
               Text('Additional Request',
                   style: TextStyle(
                       fontFamily: GoogleFonts.poppins().fontFamily,
-                      fontSize: 20,
+                      fontSize: GeneralUtil.fontSize(context) * 0.6,
                       color: Colors.white)),
             ],
           ),
@@ -1493,91 +1499,82 @@ class _AdditionalRequestDetailScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        widget.argumentAddReq.assetGrowResponseModel.data![0]
+                            .itemName!,
+                        style: TextStyle(
+                            fontSize: GeneralUtil.fontSize(context) * 0.45,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
-                            child: Column(
-                              children: [
-                                AutoSizeText(
-                                  widget.argumentAddReq.assetGrowResponseModel
-                                      .data![0].itemName!,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Image.asset(
-                                    widget.argumentAddReq.assetGrowResponseModel
-                                                .data![0].status!
+                            child: Image.asset(
+                                widget.argumentAddReq.assetGrowResponseModel
+                                            .data![0].status!
+                                            .toLowerCase() ==
+                                        'available'
+                                    ? 'assets/icons/available.png'
+                                    : widget
+                                                .argumentAddReq
+                                                .assetGrowResponseModel
+                                                .data![0]
+                                                .status!
                                                 .toLowerCase() ==
-                                            'available'
-                                        ? 'assets/icons/available.png'
+                                            'new'
+                                        ? 'assets/icons/new.png'
                                         : widget
                                                     .argumentAddReq
                                                     .assetGrowResponseModel
                                                     .data![0]
                                                     .status!
                                                     .toLowerCase() ==
-                                                'new'
-                                            ? 'assets/icons/new.png'
+                                                'on progress'
+                                            ? 'assets/icons/onprogres.png'
                                             : widget
                                                         .argumentAddReq
                                                         .assetGrowResponseModel
                                                         .data![0]
                                                         .status!
                                                         .toLowerCase() ==
-                                                    'on progress'
-                                                ? 'assets/icons/onprogres.png'
+                                                    'sold'
+                                                ? 'assets/icons/sold.png'
                                                 : widget
                                                             .argumentAddReq
                                                             .assetGrowResponseModel
                                                             .data![0]
                                                             .status!
                                                             .toLowerCase() ==
-                                                        'sold'
-                                                    ? 'assets/icons/sold.png'
+                                                        'disposed'
+                                                    ? 'assets/icons/disposed.png'
                                                     : widget
                                                                 .argumentAddReq
                                                                 .assetGrowResponseModel
                                                                 .data![0]
                                                                 .status!
                                                                 .toLowerCase() ==
-                                                            'disposed'
-                                                        ? 'assets/icons/disposed.png'
-                                                        : widget
-                                                                    .argumentAddReq
-                                                                    .assetGrowResponseModel
-                                                                    .data![0]
-                                                                    .status!
-                                                                    .toLowerCase() ==
-                                                                'onrepair'
-                                                            ? 'assets/icons/onrepair.png'
-                                                            : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'maintenance'
-                                                                ? 'assets/icons/maintenance.png'
-                                                                : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'used'
-                                                                    ? 'assets/icons/used.png'
-                                                                    : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'booked'
-                                                                        ? 'assets/icons/booked.png'
-                                                                        : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'rejected'
-                                                                            ? 'assets/icons/rejected.png'
-                                                                            : 'assets/icons/cancel.png',
-                                    width: 90),
-                                SizedBox(
-                                  height: 32,
-                                ),
-                              ],
-                            ),
+                                                            'onrepair'
+                                                        ? 'assets/icons/onrepair.png'
+                                                        : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'maintenance'
+                                                            ? 'assets/icons/maintenance.png'
+                                                            : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'used'
+                                                                ? 'assets/icons/used.png'
+                                                                : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'booked'
+                                                                    ? 'assets/icons/booked.png'
+                                                                    : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'rejected'
+                                                                        ? 'assets/icons/rejected.png'
+                                                                        : 'assets/icons/cancel.png',
+                                width: 90),
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
-                                  height: 32,
-                                ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -1597,18 +1594,102 @@ class _AdditionalRequestDetailScreenState
                                             ),
                                           )),
                                     ),
-                                    const Icon(
-                                      Icons.print_sharp,
-                                      size: 33,
-                                      color: Colors.white,
-                                    ),
+                                    BlocListener(
+                                        bloc: printBloc,
+                                        listener: (_, PrintState state) {
+                                          if (state is PrintLoading) {}
+                                          if (state is PrintLoaded) {
+                                            GeneralUtil().showSnackBarSuccess(
+                                                context, 'Print Successfully!');
+                                          }
+                                          if (state is PrintError) {
+                                            GeneralUtil().showSnackBarError(
+                                                context, state.error!);
+                                          }
+                                          if (state is PrintException) {
+                                            if (state.error.toLowerCase() ==
+                                                'unauthorized access') {
+                                              GeneralUtil().showSnackBarError(
+                                                  context, 'Session Expired');
+                                              var bottomBarProvider =
+                                                  Provider.of<NavbarProvider>(
+                                                      context,
+                                                      listen: false);
+                                              bottomBarProvider.setPage(0);
+                                              bottomBarProvider.setTab(0);
+                                              SharedPrefUtil.clearSharedPref();
+                                              Future.delayed(
+                                                  const Duration(seconds: 1),
+                                                  () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        StringRouterUtil
+                                                            .loginScreenRoute,
+                                                        (route) => false);
+                                              });
+                                            } else {
+                                              GeneralUtil().showSnackBarError(
+                                                  context, state.error);
+                                            }
+                                          }
+                                        },
+                                        child: BlocBuilder(
+                                            bloc: printBloc,
+                                            builder:
+                                                (context, PrintState state) {
+                                              if (state is PrintLoading) {
+                                                return const Center(
+                                                  child: SizedBox(
+                                                    width: 25,
+                                                    height: 25,
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                                );
+                                              }
+                                              if (state is PrintLoaded) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    printBloc.add(PrintAttempt(
+                                                        assetCode: widget
+                                                            .argumentAddReq
+                                                            .assetGrowResponseModel
+                                                            .data![0]
+                                                            .assetCode!));
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.print_sharp,
+                                                    size: 33,
+                                                    color: Colors.white,
+                                                  ),
+                                                );
+                                              }
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  printBloc.add(PrintAttempt(
+                                                      assetCode: widget
+                                                          .argumentAddReq
+                                                          .assetGrowResponseModel
+                                                          .data![0]
+                                                          .assetCode!));
+                                                },
+                                                child: const Icon(
+                                                  Icons.print_sharp,
+                                                  size: 33,
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            })),
                                   ],
                                 ),
-                                AutoSizeText(
+                                Text(
                                   widget.argumentAddReq.assetGrowResponseModel
                                       .data![0].barcode!,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: Colors.white),
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.4,
+                                      color: Colors.white),
                                 ),
                               ],
                             ),
@@ -1620,81 +1701,41 @@ class _AdditionalRequestDetailScreenState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AutoSizeText(
+                            Text(
                               'Asset No : ${widget.argumentAddReq.assetGrowResponseModel.data![0].code!}',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            AutoSizeText(
+                            Text(
                               'Usefull life : ${widget.argumentAddReq.assetGrowResponseModel.data![0].usefull!} Years',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            AutoSizeText(
+                            Text(
                               'Branch Location : ${widget.argumentAddReq.assetGrowResponseModel.data![0].regionName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].areaName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].branchName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].locationName!}',
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const AutoSizeText(
-                                  'PIC :',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.75,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AutoSizeText(
-                                        ' ${widget.argumentAddReq.assetGrowResponseModel.data![0].picCode!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].picName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                      AutoSizeText(
-                                        ' ${widget.argumentAddReq.assetGrowResponseModel.data![0].picPositionName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                            Text(
+                              'PIC : ${widget.argumentAddReq.assetGrowResponseModel.data![0].picCode!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].picName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].picPositionName!}',
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const AutoSizeText(
-                                  'User :',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.74,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AutoSizeText(
-                                        ' ${widget.argumentAddReq.assetGrowResponseModel.data![0].userCode!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].userName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                      AutoSizeText(
-                                        ' ${widget.argumentAddReq.assetGrowResponseModel.data![0].userPositionName!}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
+                            Text(
+                              'User : ${widget.argumentAddReq.assetGrowResponseModel.data![0].userCode!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].userName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].userPositionName!}',
+                              style: TextStyle(
+                                  fontSize:
+                                      GeneralUtil.fontSize(context) * 0.45,
+                                  color: Colors.white),
+                            ),
                           ],
                         ),
                       )
@@ -1726,10 +1767,13 @@ class _AdditionalRequestDetailScreenState
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
+                                    Text(
                                       dataContent[index].title,
-                                      style: const TextStyle(
-                                          fontSize: 18, color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize:
+                                              GeneralUtil.fontSize(context) *
+                                                  0.75,
+                                          color: Colors.white),
                                     ),
                                     const SizedBox(
                                       height: 8,
@@ -1737,10 +1781,12 @@ class _AdditionalRequestDetailScreenState
                                     ListView.separated(
                                         shrinkWrap: true,
                                         itemBuilder: ((context, indexes) {
-                                          return AutoSizeText(
+                                          return Text(
                                             '${dataContent[index].propertyFacility[indexes].no!}. ${dataContent[index].propertyFacility[indexes].propertyFacilityName!}',
-                                            style: const TextStyle(
-                                                fontSize: 16,
+                                            style: TextStyle(
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.55,
                                                 color: Color(0xFFbfbfbf)),
                                           );
                                         }),
@@ -1766,10 +1812,13 @@ class _AdditionalRequestDetailScreenState
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    AutoSizeText(
+                                    Text(
                                       dataContent[index].title,
-                                      style: const TextStyle(
-                                          fontSize: 18, color: Colors.white),
+                                      style: TextStyle(
+                                          fontSize:
+                                              GeneralUtil.fontSize(context) *
+                                                  0.65,
+                                          color: Colors.white),
                                     ),
                                     const SizedBox(
                                       height: 8,
@@ -1787,10 +1836,12 @@ class _AdditionalRequestDetailScreenState
                                                   color: Color(0xFFE6E7E8)),
                                             ),
                                           ),
-                                          child: AutoSizeText(
+                                          child: Text(
                                             dataContent[index].value,
-                                            style: const TextStyle(
-                                                fontSize: 16,
+                                            style: TextStyle(
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.55,
                                                 color: Color(0xFFbfbfbf)),
                                           ),
                                         ),
@@ -1810,7 +1861,12 @@ class _AdditionalRequestDetailScreenState
                                                       .argumentAddReq
                                                       .assetGrowResponseModel
                                                       .data![0]
-                                                      .longitude!));
+                                                      .longitude!),
+                                                  widget
+                                                      .argumentAddReq
+                                                      .assetGrowResponseModel
+                                                      .data![0]
+                                                      .locationName!);
                                             },
                                             child: Image.asset(
                                               'assets/imgs/map.png',
@@ -1837,6 +1893,7 @@ class _AdditionalRequestDetailScreenState
                           maintenance: widget.argumentAddReq.maintenance,
                           other: widget.argumentAddReq.other,
                           sell: widget.argumentAddReq.sell,
+                          mutation: widget.argumentAddReq.mutation,
                           assetGrowResponseModel:
                               widget.argumentAddReq.assetGrowResponseModel));
                 },
@@ -1857,10 +1914,10 @@ class _AdditionalRequestDetailScreenState
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text('Next',
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: GeneralUtil.fontSize(context) * 0.75,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600)),
                         SizedBox(width: 4),

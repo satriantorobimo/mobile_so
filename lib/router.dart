@@ -6,20 +6,28 @@ import 'package:mobile_so/features/additional_request_detail_form/additional_req
 import 'package:mobile_so/features/additional_request_detail_form/additional_request_detail_form_view_screen.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/argument_add_request.dart';
 import 'package:mobile_so/features/additional_request_detail_form/data/argument_view_add_request.dart';
+import 'package:mobile_so/features/additional_request_detail_form/data/doc_preview_request_model.dart';
 import 'package:mobile_so/features/additional_request_detail_form/doc_preview.dart';
+import 'package:mobile_so/features/additional_request_detail_form/doc_preview_network.dart';
+import 'package:mobile_so/features/additional_request_detail_form/doc_preview_pdf_network.dart';
 import 'package:mobile_so/features/additional_request_list/additional_request_list_screen.dart';
 import 'package:mobile_so/features/asset_opname/asset_opname_screen.dart';
 import 'package:mobile_so/features/asset_opname_detail/asset_opname_detail_screen.dart';
 import 'package:mobile_so/features/asset_opname_detail/data/arguments_asset_grow.dart';
 import 'package:mobile_so/features/asset_opname_detail/data/asset_grow_response_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/asset_opname_detail_form_screen.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/asset_opname_detail_form_view_screen.dart';
+import 'package:mobile_so/features/asset_opname_detail_form/data/arguments_view_model.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/data/ddl_request_screen.dart';
 import 'package:mobile_so/features/asset_opname_detail_form/drop_down_screen.dart';
+import 'package:mobile_so/features/asset_opname_list/asset_opname_list_detail_screen.dart';
 import 'package:mobile_so/features/asset_opname_list/asset_opname_list_screen.dart';
 import 'package:mobile_so/features/change_password/change_password_screen.dart';
 import 'package:mobile_so/features/daily_detail/daily_detail_screen.dart';
+import 'package:mobile_so/features/daily_detail/data/argument_daily_detail_model.dart';
 import 'package:mobile_so/features/dashboard/dashboard_screen.dart';
 import 'package:mobile_so/features/dashboard_detail/dashboard_detail_screen.dart';
+import 'package:mobile_so/features/dashboard_detail/data/argument_dashboard_detail_model.dart';
 import 'package:mobile_so/features/email_otp/email_otp_screen.dart';
 import 'package:mobile_so/features/login/login_screen.dart';
 import 'package:mobile_so/features/navbar/navbar_screen.dart';
@@ -89,9 +97,11 @@ class Routers {
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));
 
-      case StringRouterUtil.assetOpnameListScreenRoute:
+      case StringRouterUtil.assetOpnameListDetailScreenRoute:
+        final String code = settings.arguments as String;
         return PageRouteBuilder<dynamic>(
-            pageBuilder: (_, __, ___) => const AssetOpnameListScreen(),
+            pageBuilder: (_, __, ___) =>
+                AssetOpnameListDetailScreen(code: code),
             settings: RouteSettings(name: settings.name),
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));
@@ -114,8 +124,11 @@ class Routers {
                 FadeTransition(opacity: a, child: c));
 
       case StringRouterUtil.dashboardDetailScreenRoute:
+        final ArgumentDashboardDetailModel argumentDashboardDetailModel =
+            settings.arguments as ArgumentDashboardDetailModel;
         return PageRouteBuilder<dynamic>(
-            pageBuilder: (_, __, ___) => const DashboardDetailScreen(),
+            pageBuilder: (_, __, ___) => DashboardDetailScreen(
+                argumentDashboardDetailModel: argumentDashboardDetailModel),
             settings: RouteSettings(name: settings.name),
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));
@@ -180,8 +193,11 @@ class Routers {
                 FadeTransition(opacity: a, child: c));
 
       case StringRouterUtil.dailyDetailScreenRoute:
+        final ArgumentDailyDetailModel argumentDailyDetailModel =
+            settings.arguments as ArgumentDailyDetailModel;
         return PageRouteBuilder<dynamic>(
-            pageBuilder: (_, __, ___) => const DailyDetailScreen(),
+            pageBuilder: (_, __, ___) => DailyDetailScreen(
+                argumentDailyDetailModel: argumentDailyDetailModel),
             settings: RouteSettings(name: settings.name),
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));
@@ -191,6 +207,16 @@ class Routers {
         return PageRouteBuilder<dynamic>(
             pageBuilder: (_, __, ___) =>
                 AssetOpnameDetailFormScreen(data: data),
+            settings: RouteSettings(name: settings.name),
+            transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
+                FadeTransition(opacity: a, child: c));
+
+      case StringRouterUtil.assetOpnameDetailFormViewScreenRoute:
+        final ArgumentsViewModel data =
+            settings.arguments as ArgumentsViewModel;
+        return PageRouteBuilder<dynamic>(
+            pageBuilder: (_, __, ___) =>
+                AssetOpnameDetailFormViewScreen(argumentsViewModel: data),
             settings: RouteSettings(name: settings.name),
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));
@@ -229,6 +255,26 @@ class Routers {
         final String path = settings.arguments as String;
         return PageRouteBuilder<dynamic>(
             pageBuilder: (_, __, ___) => DocPreviewAssetScreen(path),
+            settings: RouteSettings(name: settings.name),
+            transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
+                FadeTransition(opacity: a, child: c));
+
+      case StringRouterUtil.docPreviewNetworkScreenRoute:
+        final DocPreviewRequestModel docPreviewRequestModel =
+            settings.arguments as DocPreviewRequestModel;
+        return PageRouteBuilder<dynamic>(
+            pageBuilder: (_, __, ___) =>
+                DocPreviewNetworkScreen(docPreviewRequestModel),
+            settings: RouteSettings(name: settings.name),
+            transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
+                FadeTransition(opacity: a, child: c));
+
+      case StringRouterUtil.docPreviewNetworkPdfScreenRoute:
+        final DocPreviewRequestModel docPreviewRequestModel =
+            settings.arguments as DocPreviewRequestModel;
+        return PageRouteBuilder<dynamic>(
+            pageBuilder: (_, __, ___) =>
+                DocPreviewNetworkPdfScreen(docPreviewRequestModel),
             settings: RouteSettings(name: settings.name),
             transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
                 FadeTransition(opacity: a, child: c));

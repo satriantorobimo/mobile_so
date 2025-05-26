@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile_so/features/login/data/general_response_model.dart';
 import 'package:mobile_so/features/login/data/login_response_model.dart';
@@ -35,6 +36,8 @@ class OtpApi {
         loginResponseModel = LoginResponseModel.fromJson(jsonDecode(res.body));
         throw loginResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
@@ -63,6 +66,8 @@ class OtpApi {
             GeneralResponseModel.fromJson(jsonDecode(res.body));
         throw generalResponseModel.message!;
       }
+    } on SocketException {
+      throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
       throw ex.toString();
     }
