@@ -232,68 +232,59 @@ class _AssetOpnameDetailFormScreenState
                             )),
                       ),
                       const SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.data.itemName!,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            widget.data.code!,
-                            style: TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                          Text(
-                            '${widget.data.status!} - ${widget.data.condition!}',
-                            style: TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.135,
-                                child: Text(
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.data.itemName!,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.data.code!,
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            Text(
+                              '${widget.data.status!} - ${widget.data.condition!}',
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
                                   'Location : ',
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.white),
                                 ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: Text(
+                                Text(
                                   '${widget.data.branchName!} - ${widget.data.locationName!}',
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.white),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.08,
-                                child: Text(
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
                                   'PIC : ',
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.white),
                                 ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.35,
-                                child: Text(
+                                Text(
                                   widget.data.picName!,
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.white),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -356,39 +347,39 @@ class _AssetOpnameDetailFormScreenState
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 45,
+                  padding: EdgeInsets.only(bottom: 8.0),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      selectedLocation == ''
-                          ? Text(
-                              'Select Location',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
+                      Expanded(
+                        child: selectedLocation == ''
+                            ? Text(
+                                'Select Location',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text(
+                                selectedLocation,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
                               ),
-                            )
-                          : Text(
-                              selectedLocation,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
-                              ),
-                            ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
+                          Icons.search,
+                          size: 32,
+                          color: Color(0xFFE6E7E8),
                         ),
                       ),
                     ],
@@ -424,39 +415,39 @@ class _AssetOpnameDetailFormScreenState
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 45,
+                  padding: EdgeInsets.only(bottom: 8.0),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      selectedCondition == ''
-                          ? Text(
-                              'Select Condition',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
+                      Expanded(
+                        child: selectedCondition == ''
+                            ? Text(
+                                'Select Condition',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text(
+                                selectedCondition,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
                               ),
-                            )
-                          : Text(
-                              selectedCondition,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
-                              ),
-                            ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
+                          Icons.search,
+                          size: 32,
+                          color: Color(0xFFE6E7E8),
                         ),
                       ),
                     ],
@@ -491,39 +482,39 @@ class _AssetOpnameDetailFormScreenState
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 45,
+                  padding: EdgeInsets.only(bottom: 8.0),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      selectedStatus == ''
-                          ? Text(
-                              'Select Status',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
+                      Expanded(
+                        child: selectedStatus == ''
+                            ? Text(
+                                'Select Status',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text(
+                                selectedStatus,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
                               ),
-                            )
-                          : Text(
-                              selectedStatus,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
-                              ),
-                            ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
+                          Icons.search,
+                          size: 32,
+                          color: Color(0xFFE6E7E8),
                         ),
                       ),
                     ],
@@ -558,39 +549,39 @@ class _AssetOpnameDetailFormScreenState
                 },
                 child: Container(
                   width: double.infinity,
-                  height: 45,
+                  padding: EdgeInsets.only(bottom: 8.0),
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      selectedPic == ''
-                          ? Text(
-                              'Select PIC',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
+                      Expanded(
+                        child: selectedPic == ''
+                            ? Text(
+                                'Select PIC',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text(
+                                selectedPic,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 16,
+                                ),
                               ),
-                            )
-                          : Text(
-                              selectedPic,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 16,
-                              ),
-                            ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
+                          Icons.search,
+                          size: 32,
+                          color: Color(0xFFE6E7E8),
                         ),
                       ),
                     ],
@@ -651,21 +642,17 @@ class _AssetOpnameDetailFormScreenState
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Longitude  : ${widget.data.longitude}',
                           style:
                               TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '||',
-                          style:
-                              TextStyle(fontSize: 16, color: Color(0xFFBFBFBF)),
-                        ),
-                        const SizedBox(width: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Latitude     : ${widget.data.latitude}',
                           style:
@@ -755,13 +742,15 @@ class _AssetOpnameDetailFormScreenState
                                   const BorderRadius.all(Radius.circular(12)),
                               border: Border.all(color: Colors.white)),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(attachmentList[index].fileName,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                child: Text(attachmentList[index].fileName,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
+                              ),
                               Row(
                                 children: [
                                   attachmentList[index].fileType == '.pdf' ||
@@ -1008,8 +997,8 @@ class _AssetOpnameDetailFormScreenState
                                         selectedStatus == '' ||
                                         selectedPic == '' ||
                                         _warrantyCtrl.text == '' ||
-                                        _warrantyCtrl.text.isEmpty &&
-                                            attachmentList.isEmpty) {
+                                        _warrantyCtrl.text.isEmpty ||
+                                        attachmentList.isEmpty) {
                                       GeneralUtil().showSnackBarError(context,
                                           'Required field cannot be empty');
                                     } else {

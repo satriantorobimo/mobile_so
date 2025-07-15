@@ -272,13 +272,11 @@ class _AssetOpnameDetailFormViewScreenState
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.6,
-                                    child: Text(
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
                                       state.opnameResultResponseModel.data![0]
                                           .itemName!,
                                       style: TextStyle(
@@ -286,181 +284,137 @@ class _AssetOpnameDetailFormViewScreenState
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.17,
-                                        child: Text(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
                                           'Asset No : ',
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
+                                        Text(
                                           state.opnameResultResponseModel
                                               .data![0].assetCode!,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.2,
-                                        child: Text(
-                                          'Usefull life : ',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          child: Text(
+                                            'Usefull life : ',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
-                                          '${state.opnameResultResponseModel.data![0].usefull!} years',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white),
+                                        Expanded(
+                                          child: Text(
+                                            '${state.opnameResultResponseModel.data![0].usefull!} years',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.22,
-                                        child: Text(
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
                                           'Opname No : ',
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        child: Text(
+                                        Text(
                                           state.opnameResultResponseModel
                                               .data![0].opnameCode!,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.25,
-                                        child: Text(
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
                                           'Opname Date : ',
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
+                                        Text(
                                           state.opnameResultResponseModel
                                               .data![0].opnameResultDate!,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.22,
-                                        child: Text(
-                                          'Opname By : ',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.22,
+                                          child: Text(
+                                            'Opname By : ',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        child: Text(
-                                          state.opnameResultResponseModel
-                                              .data![0].opnameByName!,
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white),
+                                        Expanded(
+                                          child: Text(
+                                            state.opnameResultResponseModel
+                                                .data![0].opnameByName!,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.255,
-                                        child: Text(
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
                                           'Opname Scale : ',
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.35,
-                                        child: Text(
+                                        Text(
                                           state.opnameResultResponseModel
                                               .data![0].opnameScale!,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -660,7 +614,7 @@ class _AssetOpnameDetailFormViewScreenState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
+                                Column(
                                   children: [
                                     Text(
                                       'Longitude  : ${state.opnameResultResponseModel.data![0].latitude!}',
@@ -668,14 +622,7 @@ class _AssetOpnameDetailFormViewScreenState
                                           fontSize: 16,
                                           color: Color(0xFFBFBFBF)),
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '||',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xFFBFBFBF)),
-                                    ),
-                                    const SizedBox(width: 4),
+                                    const SizedBox(height: 4),
                                     Text(
                                       'Latitude     : ${state.opnameResultResponseModel.data![0].longitude!}',
                                       style: TextStyle(
@@ -717,78 +664,63 @@ class _AssetOpnameDetailFormViewScreenState
                               : Container(),
                           state.opnameResultResponseModel.data![0].document!
                                   .isNotEmpty
-                              ? ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    String extension = state
-                                        .opnameResultResponseModel
-                                        .data![0]
-                                        .document![index]
-                                        .path!
-                                        .split('.')
-                                        .last;
-                                    return Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(12)),
-                                          border:
-                                              Border.all(color: Colors.white)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.75,
-                                            child: Text(
-                                                state
-                                                    .opnameResultResponseModel
-                                                    .data![0]
-                                                    .document![index]
-                                                    .fileName!,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                          ),
-                                          Row(
-                                            children: [
-                                              extension.toLowerCase() ==
-                                                          'pdf' ||
-                                                      extension.toLowerCase() ==
-                                                          'jpg' ||
-                                                      extension.toLowerCase() ==
-                                                          'png' ||
-                                                      extension.toLowerCase() ==
-                                                          'jpeg'
-                                                  ? InkWell(
-                                                      onTap: () async {
-                                                        if (extension
-                                                                .toLowerCase() ==
-                                                            'pdf') {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              StringRouterUtil
-                                                                  .docPreviewNetworkPdfScreenRoute,
-                                                              arguments: DocPreviewRequestModel(
-                                                                  pFileName: state
-                                                                      .opnameResultResponseModel
-                                                                      .data![0]
-                                                                      .document![
-                                                                          index]
-                                                                      .fileName!,
-                                                                  pFilePaths: state
-                                                                      .opnameResultResponseModel
-                                                                      .data![0]
-                                                                      .document![
-                                                                          index]
-                                                                      .path!));
-                                                        } else if (extension
+                              ? Column(
+                                  children: [
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'File Uploaded',
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
+                                    ),
+                                    ListView.separated(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          String extension = state
+                                              .opnameResultResponseModel
+                                              .data![0]
+                                              .document![index]
+                                              .path!
+                                              .split('.')
+                                              .last;
+                                          return Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(12)),
+                                                border: Border.all(
+                                                    color: Colors.white)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.7,
+                                                  child: Text(
+                                                      state
+                                                          .opnameResultResponseModel
+                                                          .data![0]
+                                                          .document![index]
+                                                          .fileName!,
+                                                      style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    extension.toLowerCase() ==
+                                                                'pdf' ||
+                                                            extension
                                                                     .toLowerCase() ==
                                                                 'jpg' ||
                                                             extension
@@ -796,43 +728,81 @@ class _AssetOpnameDetailFormViewScreenState
                                                                 'png' ||
                                                             extension
                                                                     .toLowerCase() ==
-                                                                'jpeg') {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              StringRouterUtil
-                                                                  .docPreviewNetworkScreenRoute,
-                                                              arguments: DocPreviewRequestModel(
-                                                                  pFileName: state
-                                                                      .opnameResultResponseModel
-                                                                      .data![0]
-                                                                      .document![
-                                                                          index]
-                                                                      .fileName!,
-                                                                  pFilePaths: state
-                                                                      .opnameResultResponseModel
-                                                                      .data![0]
-                                                                      .document![
-                                                                          index]
-                                                                      .path!));
-                                                        } else {}
-                                                      },
-                                                      child: const Icon(
-                                                        Icons.preview_rounded,
-                                                        color: Colors.white,
-                                                      ),
-                                                    )
-                                                  : Container(),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return const SizedBox(height: 12);
-                                  },
-                                  itemCount: state.opnameResultResponseModel
-                                      .data![0].document!.length)
+                                                                'jpeg'
+                                                        ? InkWell(
+                                                            onTap: () async {
+                                                              if (extension
+                                                                      .toLowerCase() ==
+                                                                  'pdf') {
+                                                                Navigator.pushNamed(
+                                                                    context,
+                                                                    StringRouterUtil
+                                                                        .docPreviewNetworkPdfScreenRoute,
+                                                                    arguments: DocPreviewRequestModel(
+                                                                        pFileName: state
+                                                                            .opnameResultResponseModel
+                                                                            .data![
+                                                                                0]
+                                                                            .document![
+                                                                                index]
+                                                                            .fileName!,
+                                                                        pFilePaths: state
+                                                                            .opnameResultResponseModel
+                                                                            .data![0]
+                                                                            .document![index]
+                                                                            .path!));
+                                                              } else if (extension
+                                                                          .toLowerCase() ==
+                                                                      'jpg' ||
+                                                                  extension
+                                                                          .toLowerCase() ==
+                                                                      'png' ||
+                                                                  extension
+                                                                          .toLowerCase() ==
+                                                                      'jpeg') {
+                                                                Navigator.pushNamed(
+                                                                    context,
+                                                                    StringRouterUtil
+                                                                        .docPreviewNetworkScreenRoute,
+                                                                    arguments: DocPreviewRequestModel(
+                                                                        pFileName: state
+                                                                            .opnameResultResponseModel
+                                                                            .data![
+                                                                                0]
+                                                                            .document![
+                                                                                index]
+                                                                            .fileName!,
+                                                                        pFilePaths: state
+                                                                            .opnameResultResponseModel
+                                                                            .data![0]
+                                                                            .document![index]
+                                                                            .path!));
+                                                              } else {}
+                                                            },
+                                                            child: const Icon(
+                                                              Icons
+                                                                  .preview_rounded,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          )
+                                                        : Container(),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(height: 12);
+                                        },
+                                        itemCount: state
+                                            .opnameResultResponseModel
+                                            .data![0]
+                                            .document!
+                                            .length),
+                                  ],
+                                )
                               : Container(),
                           const SizedBox(
                             height: 24,

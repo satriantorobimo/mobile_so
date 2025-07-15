@@ -108,112 +108,139 @@ class _CardWidgetState extends State<CardWidget> {
                               color: Colors.green,
                             ),
                             SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.32,
-                                      child: Text('Opname No',
-                                          style: TextStyle(
-                                              fontFamily: GoogleFonts.poppins()
-                                                  .fontFamily,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: GeneralUtil.fontSize(
-                                                      context) *
-                                                  0.35,
-                                              color: Colors.white)),
-                                    ),
-                                    Text(
-                                        ': ${widget.argumentDashboardDetailModel.code}',
-                                        style: TextStyle(
-                                            fontFamily: GoogleFonts.poppins()
-                                                .fontFamily,
-                                            fontSize:
-                                                GeneralUtil.fontSize(context) *
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.32,
+                                        child: Text('Opname No',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
                                                     0.35,
-                                            color: Colors.white)),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.32,
-                                      child: Text('Periode Opname',
-                                          style: TextStyle(
-                                              fontFamily: GoogleFonts.poppins()
-                                                  .fontFamily,
-                                              fontSize: GeneralUtil.fontSize(
-                                                      context) *
-                                                  0.35,
-                                              color: Colors.white)),
-                                    ),
-                                    Text(
-                                        ': ${GeneralUtil.dateConvertList(widget.argumentDashboardDetailModel.dateStart)} to\n  ${GeneralUtil.dateConvertList(widget.argumentDashboardDetailModel.dateEnd)}',
-                                        style: TextStyle(
-                                            fontFamily: GoogleFonts.poppins()
-                                                .fontFamily,
-                                            fontSize:
-                                                GeneralUtil.fontSize(context) *
+                                                color: Colors.white)),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                            ': ${widget.argumentDashboardDetailModel.code}',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
                                                     0.35,
-                                            color: Colors.white)),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.32,
-                                      child: Text('Total Asset Opname',
-                                          style: TextStyle(
-                                              fontFamily: GoogleFonts.poppins()
-                                                  .fontFamily,
-                                              fontSize: GeneralUtil.fontSize(
-                                                      context) *
-                                                  0.35,
-                                              color: Colors.white)),
-                                    ),
-                                    Text(
-                                        ': ${state.assetOpnameScheduleResponseModel.data![0].totalAsset}',
-                                        style: TextStyle(
-                                            fontFamily: GoogleFonts.poppins()
-                                                .fontFamily,
-                                            fontSize:
-                                                GeneralUtil.fontSize(context) *
+                                                color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.32,
+                                        child: Text('Periode Opname',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
                                                     0.35,
-                                            color: Colors.white)),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.32,
-                                      child: Text('Status',
-                                          style: TextStyle(
-                                              fontFamily: GoogleFonts.poppins()
-                                                  .fontFamily,
-                                              fontSize: GeneralUtil.fontSize(
-                                                      context) *
-                                                  0.35,
-                                              color: Colors.white)),
-                                    ),
-                                    Text(
-                                        ': ${state.assetOpnameScheduleResponseModel.data![0].status}',
-                                        style: TextStyle(
-                                            fontFamily: GoogleFonts.poppins()
-                                                .fontFamily,
-                                            fontSize:
-                                                GeneralUtil.fontSize(context) *
+                                                color: Colors.white)),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                            ': ${GeneralUtil.dateConvertList(widget.argumentDashboardDetailModel.dateStart)} to\n  ${GeneralUtil.dateConvertList(widget.argumentDashboardDetailModel.dateEnd)}',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
                                                     0.35,
-                                            color: Colors.white)),
-                                  ],
-                                ),
-                              ],
+                                                color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.32,
+                                        child: Text('Total Asset Opname',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.35,
+                                                color: Colors.white)),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                            ': ${state.assetOpnameScheduleResponseModel.data![0].totalAsset}',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.35,
+                                                color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.32,
+                                        child: Text('Status',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.35,
+                                                color: Colors.white)),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                            ': ${state.assetOpnameScheduleResponseModel.data![0].status}',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    GoogleFonts.poppins()
+                                                        .fontFamily,
+                                                fontSize: GeneralUtil.fontSize(
+                                                        context) *
+                                                    0.35,
+                                                color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

@@ -70,47 +70,70 @@ class _PieChartState extends State<PieChart> {
                 for (var element in chartData) {
                   totalValue += element.y;
                 }
-                return SfCircularChart(
-                    legend: Legend(
-                      shouldAlwaysShowScrollbar: false,
-                      isVisible: true,
-                      textStyle: TextStyle(fontSize: 12, color: Colors.white),
-                      overflowMode: LegendItemOverflowMode.wrap,
-                      toggleSeriesVisibility: true,
-                      position: LegendPosition.bottom,
-                      height: '400',
-                    ),
-                    series: <CircularSeries>[
-                      // Render pie chart
-                      PieSeries<ChartData, String>(
-                        dataSource: chartData,
-                        pointColorMapper: (ChartData data, _) => data.color,
-                        xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y,
-                        dataLabelSettings: DataLabelSettings(
-                          builder: (dynamic data, dynamic point, dynamic series,
-                              int pointIndex, int seriesIndex) {
-                            return Text(
-                              data.category +
-                                  ' ${(data.total / (totalValue / 100)).round()}' +
-                                  '%',
-                              style: const TextStyle(fontSize: 10),
-                            );
-                          },
-                          isVisible: true, // Enables labels
-                          textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                          labelPosition: ChartDataLabelPosition
-                              .outside, // Places labels outside
-                          connectorLineSettings: ConnectorLineSettings(
-                            type: ConnectorType
-                                .curve, // Adds a curved connector line
+                return SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: SfCircularChart(
+                      margin: EdgeInsets.all(20),
+                      legend: Legend(
+                        shouldAlwaysShowScrollbar: false,
+                        isVisible: true,
+                        textStyle: TextStyle(fontSize: 14, color: Colors.white),
+                        overflowMode: LegendItemOverflowMode.wrap,
+                        toggleSeriesVisibility: true,
+                        position: LegendPosition.bottom,
+                        height: '30%',
+                      ),
+                      series: <CircularSeries>[
+                        // Render pie chart
+                        PieSeries<ChartData, String>(
+                          dataSource: chartData,
+                          pointColorMapper: (ChartData data, _) => data.color,
+                          xValueMapper: (ChartData data, _) => data.x,
+                          yValueMapper: (ChartData data, _) => data.y,
+                          radius: '80%', // Increased radius for larger chart
+                          dataLabelSettings: DataLabelSettings(
+                            builder: (dynamic data,
+                                dynamic point,
+                                dynamic series,
+                                int pointIndex,
+                                int seriesIndex) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  data.x +
+                                      ' ${(data.y / (totalValue / 100)).round()}' +
+                                      '%',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
+                            isVisible: true, // Enables labels
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                            labelPosition: ChartDataLabelPosition
+                                .outside, // Places labels outside
+                            connectorLineSettings: ConnectorLineSettings(
+                              type: ConnectorType
+                                  .curve, // Adds a curved connector line
+                              width: 2,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
                           ),
-                        ),
-                      )
-                    ]);
+                        )
+                      ]),
+                );
               }
 
               return Container();

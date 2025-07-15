@@ -134,7 +134,7 @@ class _AssetOpnameScreenState extends State<AssetOpnameScreen> {
                                     StringRouterUtil.scannerScreenRoute)
                                 .then((val) {
                               setState(() {
-                                if (val != 'null') {
+                                if (val != null) {
                                   _assetCodeCtrl.text = val.toString();
                                   assetGrowBloc.add(AssetGrowAttempt(
                                       assetGrowRequestModel:

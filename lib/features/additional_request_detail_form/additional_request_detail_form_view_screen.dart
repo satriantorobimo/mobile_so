@@ -127,12 +127,38 @@ class _AdditionalRequestDetailFormViewScreenState
     setState(() {});
   }
 
+  int _calculateNewCursorPosition(String oldText, String newText, int oldCursorPosition) {
+    // Count dots before cursor in old text
+    final String textBeforeCursor = oldText.substring(0, oldCursorPosition.clamp(0, oldText.length));
+    final int dotsBeforeCursor = textBeforeCursor.split('.').length - 1;
+    
+    // Calculate position in raw (unformatted) text
+    final int rawPosition = oldCursorPosition - dotsBeforeCursor;
+    
+    // Find corresponding position in new formatted text
+    int newPosition = 0;
+    int rawCount = 0;
+    
+    for (int i = 0; i < newText.length && rawCount < rawPosition; i++) {
+      if (newText[i] != '.') {
+        rawCount++;
+      }
+      newPosition = i + 1;
+    }
+    
+    return newPosition.clamp(0, newText.length);
+  }
+
   void _formatSellTextField() {
     if (_isFormatting) return;
 
     _isFormatting = true;
-    final String rawInput =
-        _priceCtrl.text.replaceAll('.', ''); // Remove existing dots
+    
+    // Store current cursor position
+    final int cursorPosition = _priceCtrl.selection.baseOffset;
+    final String oldText = _priceCtrl.text;
+    
+    final String rawInput = oldText.replaceAll('.', ''); // Remove existing dots
     final int? value = int.tryParse(rawInput);
 
     if (value != null) {
@@ -140,9 +166,13 @@ class _AdditionalRequestDetailFormViewScreenState
 
       // Format the value for display
       final String formattedText = _currencyFormat.format(value);
+      
+      // Calculate new cursor position to preserve user's intended position
+      final int newCursorPosition = _calculateNewCursorPosition(oldText, formattedText, cursorPosition);
+      
       _priceCtrl.value = TextEditingValue(
         text: formattedText,
-        selection: TextSelection.collapsed(offset: formattedText.length),
+        selection: TextSelection.collapsed(offset: newCursorPosition),
       );
     } else {
       setState(() {
@@ -203,12 +233,11 @@ class _AdditionalRequestDetailFormViewScreenState
                         )),
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        child: Text(
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           widget.argumentViewAddReq.register
                               ? widget.argumentViewAddReq.data.itemName!
                               : widget.argumentViewAddReq.data.assetName!,
@@ -217,37 +246,36 @@ class _AdditionalRequestDetailFormViewScreenState
                               color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      Text(
-                        widget.argumentViewAddReq.data.assetCode!,
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Text(
-                        widget.argumentViewAddReq.data.status!,
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Text(
-                              'PIC : ',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white),
+                        Text(
+                          widget.argumentViewAddReq.data.assetCode!,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        Text(
+                          widget.argumentViewAddReq.data.status!,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Text(
+                                'PIC : ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            child: Text(
-                              name,
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white),
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -604,7 +632,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -637,7 +665,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -670,7 +698,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -922,7 +950,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -955,7 +983,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -988,7 +1016,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1130,7 +1158,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1163,7 +1191,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1196,7 +1224,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1229,7 +1257,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1370,7 +1398,7 @@ class _AdditionalRequestDetailFormViewScreenState
         // ),
         // Container(
         //   width: double.infinity,
-        //   height: 35,
+        //   padding: EdgeInsets.only(bottom: 8.0),
         //   decoration: const BoxDecoration(
         //     border: Border(
         //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1404,7 +1432,7 @@ class _AdditionalRequestDetailFormViewScreenState
         // ),
         // Container(
         //   width: double.infinity,
-        //   height: 35,
+        //   padding: EdgeInsets.only(bottom: 8.0),
         //   decoration: const BoxDecoration(
         //     border: Border(
         //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1438,7 +1466,7 @@ class _AdditionalRequestDetailFormViewScreenState
         // ),
         // Container(
         //   width: double.infinity,
-        //   height: 35,
+        //   padding: EdgeInsets.only(bottom: 8.0),
         //   decoration: const BoxDecoration(
         //     border: Border(
         //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1472,7 +1500,7 @@ class _AdditionalRequestDetailFormViewScreenState
         // ),
         // Container(
         //   width: double.infinity,
-        //   height: 35,
+        //   padding: EdgeInsets.only(bottom: 8.0),
         //   decoration: const BoxDecoration(
         //     border: Border(
         //       bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1507,7 +1535,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),

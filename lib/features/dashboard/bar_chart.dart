@@ -83,12 +83,10 @@ class _BarsChartState extends State<BarsChart> {
                           ],
                           border: Border.all(
                               color: const Color(0xFFC2C2C2).withOpacity(0.2))),
-                      child: Stack(
+                      child: Column(
                         children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 25),
+                          Expanded(
+                            child: Center(
                               child: Text(
                                   state
                                       .barChartResponseModel.data![index].total!
@@ -100,31 +98,30 @@ class _BarsChartState extends State<BarsChart> {
                                       fontWeight: FontWeight.w600)),
                             ),
                           ),
-                          Positioned(
-                              bottom: 0,
-                              right: 0,
-                              left: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(8),
-                                    bottomRight: Radius.circular(8),
-                                  ),
-                                  color: const Color(0xFF130139),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                      state.barChartResponseModel.data![index]
-                                          .description!,
-                                      style: TextStyle(
-                                          fontSize:
-                                              GeneralUtil.fontSize(context) *
-                                                  0.21,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ))
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8),
+                              ),
+                              color: const Color(0xFF130139),
+                            ),
+                            child: Text(
+                                state.barChartResponseModel.data![index]
+                                    .description!,
+                                textAlign: TextAlign.center,
+                                maxLines:
+                                    2, // Allow up to 2 lines for description
+                                overflow: TextOverflow
+                                    .ellipsis, // Handle very long text gracefully
+                                style: TextStyle(
+                                    fontSize:
+                                        GeneralUtil.fontSize(context) * 0.21,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          )
                         ],
                       ),
                     );

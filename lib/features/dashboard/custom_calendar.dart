@@ -96,6 +96,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     return Container(
                       color: Colors.white,
                       child: TableCalendar(
+                        daysOfWeekHeight: 40.0,
                         firstDay: DateTime.utc(2024, 1, 1),
                         lastDay: DateTime.utc(2025, 12, 31),
                         rowHeight:
@@ -138,6 +139,41 @@ class _CustomCalendarState extends State<CustomCalendar> {
                               month: focusedDay.month.toString(),
                               year: focusedDay.year.toString()));
                         },
+                        daysOfWeekStyle: DaysOfWeekStyle(
+                          weekdayStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize:
+                                12.0, // Smaller font size for weekday headers
+                            fontWeight: FontWeight.bold,
+                          ),
+                          weekendStyle: TextStyle(
+                            color: Colors.red,
+                            fontSize:
+                                12.0, // Smaller font size for weekend headers
+                            fontWeight: FontWeight.bold,
+                          ),
+                          dowTextFormatter: (date, locale) {
+                            // Custom text formatter to show abbreviated day names
+                            switch (date.weekday) {
+                              case 1:
+                                return 'Mon';
+                              case 2:
+                                return 'Tue';
+                              case 3:
+                                return 'Wed';
+                              case 4:
+                                return 'Thu';
+                              case 5:
+                                return 'Fri';
+                              case 6:
+                                return 'Sat';
+                              case 7:
+                                return 'Sun';
+                              default:
+                                return '';
+                            }
+                          },
+                        ),
                         calendarStyle: CalendarStyle(
                           cellMargin: EdgeInsets.zero,
                           cellPadding: EdgeInsets.zero,

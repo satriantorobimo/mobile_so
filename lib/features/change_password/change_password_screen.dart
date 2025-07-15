@@ -90,7 +90,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'NEW PASSWORD',
+                          'PASSWORD',
                           style: TextStyle(
                               fontSize: GeneralUtil.fontSize(context) * 0.4,
                               color: Colors.white),
@@ -128,9 +128,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               }),
                               decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: EdgeInsets.all(
-                                      MediaQuery.of(context).size.height *
-                                          0.035),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.height * 0.035,
+                                      MediaQuery.of(context).size.height * 0.035,
+                                      MediaQuery.of(context).size.height * 0.08,
+                                      MediaQuery.of(context).size.height * 0.035),
                                   filled: true,
                                   fillColor: const Color(0xFFB1ADBC),
                                   enabledBorder: OutlineInputBorder(
@@ -221,9 +223,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               }),
                               decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: EdgeInsets.all(
-                                      MediaQuery.of(context).size.height *
-                                          0.035),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.height * 0.035,
+                                      MediaQuery.of(context).size.height * 0.035,
+                                      MediaQuery.of(context).size.height * 0.08,
+                                      MediaQuery.of(context).size.height * 0.035),
                                   hintStyle: TextStyle(
                                       color: Colors.grey.withOpacity(0.5)),
                                   filled: true,
@@ -349,7 +353,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       if (state is ChangePasswordLoaded) {
                         GeneralUtil().showSnackBarSuccess(
                             context, 'Change Password Successfully');
-                        Future.delayed(const Duration(milliseconds: 500), () {
+                        Future.delayed(const Duration(seconds: 2), () {
                           setState(() {
                             isLoading = false;
                           });

@@ -205,12 +205,40 @@ class _AdditionalRequestDetailFormScreenState
     setState(() {});
   }
 
+  int _calculateNewCursorPosition(
+      String oldText, String newText, int oldCursorPosition) {
+    // Count dots before cursor in old text
+    final String textBeforeCursor =
+        oldText.substring(0, oldCursorPosition.clamp(0, oldText.length));
+    final int dotsBeforeCursor = textBeforeCursor.split('.').length - 1;
+
+    // Calculate position in raw (unformatted) text
+    final int rawPosition = oldCursorPosition - dotsBeforeCursor;
+
+    // Find corresponding position in new formatted text
+    int newPosition = 0;
+    int rawCount = 0;
+
+    for (int i = 0; i < newText.length && rawCount < rawPosition; i++) {
+      if (newText[i] != '.') {
+        rawCount++;
+      }
+      newPosition = i + 1;
+    }
+
+    return newPosition.clamp(0, newText.length);
+  }
+
   void _formatSellTextField() {
     if (_isFormatting) return;
 
     _isFormatting = true;
-    final String rawInput =
-        _priceCtrl.text.replaceAll('.', ''); // Remove existing dots
+
+    // Store current cursor position
+    final int cursorPosition = _priceCtrl.selection.baseOffset;
+    final String oldText = _priceCtrl.text;
+
+    final String rawInput = oldText.replaceAll('.', ''); // Remove existing dots
     final int? value = int.tryParse(rawInput);
 
     if (value != null) {
@@ -220,9 +248,14 @@ class _AdditionalRequestDetailFormScreenState
 
       // Format the value for display
       final String formattedText = _currencyFormat.format(value);
+
+      // Calculate new cursor position to preserve user's intended position
+      final int newCursorPosition =
+          _calculateNewCursorPosition(oldText, formattedText, cursorPosition);
+
       _priceCtrl.value = TextEditingValue(
         text: formattedText,
-        selection: TextSelection.collapsed(offset: formattedText.length),
+        selection: TextSelection.collapsed(offset: newCursorPosition),
       );
     } else {
       setState(() {
@@ -344,13 +377,11 @@ class _AdditionalRequestDetailFormScreenState
                                   )),
                             ),
                             const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  child: Text(
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
                                     widget.argumentAddReq.assetGrowResponseModel
                                         .data![0].itemName!,
                                     style: TextStyle(
@@ -359,29 +390,28 @@ class _AdditionalRequestDetailFormScreenState
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Text(
-                                  widget.argumentAddReq.assetGrowResponseModel
-                                      .data![0].code!,
-                                  style: TextStyle(
-                                      fontSize:
-                                          GeneralUtil.fontSize(context) * 0.45,
-                                      color: Colors.white),
-                                ),
-                                Text(
-                                  '${widget.argumentAddReq.assetGrowResponseModel.data![0].status!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].condition!}',
-                                  style: TextStyle(
-                                      fontSize:
-                                          GeneralUtil.fontSize(context) * 0.45,
-                                      color: Colors.white),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.165,
-                                      child: Text(
+                                  Text(
+                                    widget.argumentAddReq.assetGrowResponseModel
+                                        .data![0].code!,
+                                    style: TextStyle(
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) *
+                                                0.45,
+                                        color: Colors.white),
+                                  ),
+                                  Text(
+                                    '${widget.argumentAddReq.assetGrowResponseModel.data![0].status!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].condition!}',
+                                    style: TextStyle(
+                                        fontSize:
+                                            GeneralUtil.fontSize(context) *
+                                                0.45,
+                                        color: Colors.white),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
                                         'Location : ',
                                         style: TextStyle(
                                             fontSize:
@@ -389,11 +419,7 @@ class _AdditionalRequestDetailFormScreenState
                                                     0.45,
                                             color: Colors.white),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: Text(
+                                      Text(
                                         '${widget.argumentAddReq.assetGrowResponseModel.data![0].branchName!} - ${widget.argumentAddReq.assetGrowResponseModel.data![0].locationName!}',
                                         style: TextStyle(
                                             fontSize:
@@ -401,25 +427,18 @@ class _AdditionalRequestDetailFormScreenState
                                                     0.45,
                                             color: Colors.white),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.08,
-                                      child: Text(
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
                                         'PIC : ',
                                         style: TextStyle(
                                             fontSize: 14, color: Colors.white),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.35,
-                                      child: Text(
+                                      Text(
                                         widget
                                             .argumentAddReq
                                             .assetGrowResponseModel
@@ -431,10 +450,10 @@ class _AdditionalRequestDetailFormScreenState
                                                     0.45,
                                             color: Colors.white),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -581,7 +600,6 @@ class _AdditionalRequestDetailFormScreenState
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.65,
                                 child: Text(attachmentList[index].fileName,
-                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize:
                                             GeneralUtil.fontSize(context) *
@@ -1009,7 +1027,6 @@ class _AdditionalRequestDetailFormScreenState
                                       }
                                     } else if (selectRequest == 'Maintenance') {
                                       if (selectRequest == '' ||
-                                          selectedLocationCode == '' ||
                                           selectedTypeCode == '' ||
                                           answerVal.isEmpty ||
                                           _remarksCtrl.text == '' ||
@@ -1167,7 +1184,7 @@ class _AdditionalRequestDetailFormScreenState
                 },
           child: Container(
             width: double.infinity,
-            height: 45,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1193,13 +1210,12 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -1224,7 +1240,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1263,7 +1279,7 @@ class _AdditionalRequestDetailFormScreenState
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(18),
+            LengthLimitingTextInputFormatter(16),
           ],
           style: const TextStyle(color: Colors.white),
           onChanged: (val) {
@@ -1316,7 +1332,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1391,7 +1407,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1498,13 +1514,12 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -1529,7 +1544,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1684,13 +1699,12 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -1715,7 +1729,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1750,7 +1764,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1786,7 +1800,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1829,7 +1843,7 @@ class _AdditionalRequestDetailFormScreenState
             ),
           ),
           child: Text(
-            '$name - $uid',
+            '$uid - $name',
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
@@ -1897,6 +1911,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1929,7 +1944,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          height: 35,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1941,81 +1956,6 @@ class _AdditionalRequestDetailFormScreenState
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
               fontSize: GeneralUtil.fontSize(context) * 0.45,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Location',
-            style: TextStyle(
-                fontSize: GeneralUtil.fontSize(context) * 0.55,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        GestureDetector(
-          onTap: () async {
-            final result = await Navigator.pushNamed(
-                context, StringRouterUtil.dropDownScreenRoute,
-                arguments: DdlRequestScreen(
-                    title: 'location',
-                    source: selectRequest,
-                    assetCode: widget
-                        .argumentAddReq.assetGrowResponseModel.data![0].code));
-            if (result != null && result is Map<String, dynamic>) {
-              setState(() {
-                selectedLocation = result['value']!;
-                selectedLocationCode = result['code']!;
-              });
-            }
-          },
-          child: Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                selectedLocation == ''
-                    ? Text(
-                        'Select Location',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontFamily: GoogleFonts.poppins().fontFamily,
-                          fontSize: GeneralUtil.fontSize(context) * 0.45,
-                        ),
-                      )
-                    : SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Text(
-                          selectedLocation,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: GoogleFonts.poppins().fontFamily,
-                            fontSize: GeneralUtil.fontSize(context) * 0.45,
-                          ),
-                        ),
-                      ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                  ),
-                ),
-              ],
             ),
           ),
         ),
@@ -2110,6 +2050,7 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2127,8 +2068,7 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       )
-                    : SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                    : Expanded(
                         child: Text(
                           selectedType,
                           style: TextStyle(
@@ -2138,13 +2078,12 @@ class _AdditionalRequestDetailFormScreenState
                           ),
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -2169,14 +2108,14 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.only(bottom: 8),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
             ),
           ),
           child: Text(
-            '$name - $uid',
+            '$uid - $name',
             style: TextStyle(
               color: Colors.grey,
               fontFamily: GoogleFonts.poppins().fontFamily,
@@ -2244,6 +2183,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2276,6 +2216,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2308,6 +2249,7 @@ class _AdditionalRequestDetailFormScreenState
         ),
         Container(
           width: double.infinity,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2385,11 +2327,8 @@ class _AdditionalRequestDetailFormScreenState
                           ),
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
                     Icons.search,
                     size: 32,
@@ -2477,7 +2416,7 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
-            height: 45,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2503,13 +2442,12 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -2577,13 +2515,12 @@ class _AdditionalRequestDetailFormScreenState
                           fontSize: GeneralUtil.fontSize(context) * 0.45,
                         ),
                       ),
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.search,
+                    size: 32,
+                    color: Color(0xFFE6E7E8),
                   ),
                 ),
               ],
@@ -2682,7 +2619,7 @@ class _AdditionalRequestDetailFormScreenState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Column(
                 children: [
                   Text(
                     'Longitude  : ${widget.argumentAddReq.assetGrowResponseModel.data![0].longitude}',
@@ -2690,14 +2627,7 @@ class _AdditionalRequestDetailFormScreenState
                         fontSize: GeneralUtil.fontSize(context) * 0.45,
                         color: Color(0xFFBFBFBF)),
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '||',
-                    style: TextStyle(
-                        fontSize: GeneralUtil.fontSize(context) * 0.45,
-                        color: Color(0xFFBFBFBF)),
-                  ),
-                  const SizedBox(width: 4),
+                  const SizedBox(height: 4),
                   Text(
                     'Latitude     : ${widget.argumentAddReq.assetGrowResponseModel.data![0].latitude}',
                     style: TextStyle(

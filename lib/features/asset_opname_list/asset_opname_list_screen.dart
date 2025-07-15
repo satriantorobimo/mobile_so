@@ -200,11 +200,11 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.135,
+                                                  0.1,
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.135,
+                                                  0.1,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: state
@@ -224,7 +224,7 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                               .fontFamily,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 17,
+                                                      fontSize: 12,
                                                       color: Colors.white)),
                                             ),
                                             SizedBox(width: 16),
@@ -239,7 +239,7 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.29,
+                                                              0.25,
                                                       child: AutoSizeText(
                                                           'Opname No',
                                                           style: TextStyle(
@@ -249,7 +249,7 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              fontSize: 14,
+                                                              fontSize: 13,
                                                               color: Colors
                                                                   .white)),
                                                     ),
@@ -260,7 +260,7 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                                 GoogleFonts
                                                                         .poppins()
                                                                     .fontFamily,
-                                                            fontSize: 12,
+                                                            fontSize: 11,
                                                             color:
                                                                 Colors.white)),
                                                   ],
@@ -274,7 +274,7 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.29,
+                                                              0.25,
                                                       child: AutoSizeText(
                                                           'Periode Opname ',
                                                           style: TextStyle(
@@ -313,13 +313,15 @@ class _AssetOpnameListScreenState extends State<AssetOpnameListScreen> {
                                                   ],
                                                 ),
                                                 Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.29,
+                                                              0.25,
                                                       child: AutoSizeText(
                                                           'Total Asset Opname',
                                                           style: TextStyle(

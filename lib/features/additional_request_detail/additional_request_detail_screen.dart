@@ -1568,7 +1568,7 @@ class _AdditionalRequestDetailScreenState
                                                                     : widget.argumentAddReq.assetGrowResponseModel.data![0].status!.toLowerCase() == 'rejected'
                                                                         ? 'assets/icons/rejected.png'
                                                                         : 'assets/icons/cancel.png',
-                                width: 90),
+                                width: 100),
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
@@ -1817,7 +1817,7 @@ class _AdditionalRequestDetailScreenState
                                       style: TextStyle(
                                           fontSize:
                                               GeneralUtil.fontSize(context) *
-                                                  0.65,
+                                                  0.45,
                                           color: Colors.white),
                                     ),
                                     const SizedBox(
@@ -1836,13 +1836,18 @@ class _AdditionalRequestDetailScreenState
                                                   color: Color(0xFFE6E7E8)),
                                             ),
                                           ),
-                                          child: Text(
-                                            dataContent[index].value,
-                                            style: TextStyle(
-                                                fontSize: GeneralUtil.fontSize(
-                                                        context) *
-                                                    0.55,
-                                                color: Color(0xFFbfbfbf)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20.0),
+                                            child: Text(
+                                              dataContent[index].value,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      GeneralUtil.fontSize(
+                                                              context) *
+                                                          0.45,
+                                                  color: Color(0xFFbfbfbf)),
+                                            ),
                                           ),
                                         ),
                                         Positioned(

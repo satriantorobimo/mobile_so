@@ -135,7 +135,9 @@ class _AdditionalRequestScreenState extends State<AdditionalRequestScreen> {
                                     StringRouterUtil.scannerScreenRoute)
                                 .then((val) {
                               setState(() {
-                                _assetCodeCtrl.text = val.toString();
+                                if (val != null) {
+                                  _assetCodeCtrl.text = val.toString();
+                                }
                               });
                               assetGrowBloc.add(AssetGrowAttempt(
                                   assetGrowRequestModel: AssetGrowRequestModel(

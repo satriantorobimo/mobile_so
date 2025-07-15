@@ -1432,14 +1432,7 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
                     .propertyFacility ??
                 []));
-        dataContent.add(DataContent(
-            'Depreciation Commercial',
-            '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryFiscalName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryFiscalName!}',
-            false,
-            false,
-            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
-                    .propertyFacility ??
-                []));
+
         dataContent.add(DataContent(
             'Purchase Date',
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
@@ -1889,7 +1882,7 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                       style: TextStyle(
                                           fontSize:
                                               GeneralUtil.fontSize(context) *
-                                                  0.6,
+                                                  0.45,
                                           color: Colors.white),
                                     ),
                                     const SizedBox(
@@ -1908,13 +1901,18 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                                   color: Color(0xFFE6E7E8)),
                                             ),
                                           ),
-                                          child: Text(
-                                            dataContent[index].value,
-                                            style: TextStyle(
-                                                fontSize: GeneralUtil.fontSize(
-                                                        context) *
-                                                    0.5,
-                                                color: Color(0xFFbfbfbf)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20.0),
+                                            child: Text(
+                                              dataContent[index].value,
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      GeneralUtil.fontSize(
+                                                              context) *
+                                                          0.45,
+                                                  color: Color(0xFFbfbfbf)),
+                                            ),
                                           ),
                                         ),
                                         Positioned(
@@ -1972,11 +1970,15 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                               setState(() {
                                 isLoading = false;
                               });
+
                               GeneralUtil().showSnackBarSuccess(
                                   context, 'Reserved Successfully!');
                               if (!isFromReserve) {
                                 ScaffoldMessenger.of(context)
                                     .hideCurrentSnackBar();
+                                setState(() {
+                                  isFromReserve = true;
+                                });
                                 Navigator.pushNamed(
                                     context,
                                     StringRouterUtil
@@ -2101,7 +2103,7 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                                       fontSize:
                                                           GeneralUtil.fontSize(
                                                                   context) *
-                                                              0.6,
+                                                              0.43,
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.w600)),
@@ -2111,68 +2113,82 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                       );
                               })),
                       const SizedBox(width: 16),
-                      InkWell(
-                        onTap: widget.argumentsAssetGrow.assetGrowResponseModel
-                                    .data![0].isOpnameReserved! ==
-                                ''
-                            ? null
-                            : () {
-                                if (widget
-                                            .argumentsAssetGrow
-                                            .assetGrowResponseModel
-                                            .data![0]
-                                            .isOpnameReserved! ==
-                                        '1' &&
-                                    !isFromReserve) {
-                                  reservedBloc.add(ReservedAttempt(
-                                      assetCode: widget
+                      isLoading
+                          ? const Center(
+                              child: SizedBox(
+                                width: 66,
+                                height: 66,
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : InkWell(
+                              onTap: widget
                                           .argumentsAssetGrow
                                           .assetGrowResponseModel
                                           .data![0]
-                                          .code!));
-                                } else {
-                                  Navigator.pushNamed(
-                                      context,
-                                      StringRouterUtil
-                                          .assetOpnameDetailFormScreenRoute,
-                                      arguments: widget.argumentsAssetGrow
-                                          .assetGrowResponseModel.data![0]);
-                                }
-                              },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          height: 66,
-                          decoration: BoxDecoration(
-                            color: widget
-                                        .argumentsAssetGrow
-                                        .assetGrowResponseModel
-                                        .data![0]
-                                        .isOpnameReserved! ==
-                                    ''
-                                ? Colors.grey
-                                : Colors.green,
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('OPNAME',
-                                  style: TextStyle(
-                                      fontSize:
-                                          GeneralUtil.fontSize(context) * 0.6,
+                                          .isOpnameReserved! ==
+                                      ''
+                                  ? null
+                                  : () {
+                                      if (widget
+                                                  .argumentsAssetGrow
+                                                  .assetGrowResponseModel
+                                                  .data![0]
+                                                  .isOpnameReserved! ==
+                                              '1' &&
+                                          !isFromReserve) {
+                                        reservedBloc.add(ReservedAttempt(
+                                            assetCode: widget
+                                                .argumentsAssetGrow
+                                                .assetGrowResponseModel
+                                                .data![0]
+                                                .code!));
+                                      } else {
+                                        Navigator.pushNamed(
+                                            context,
+                                            StringRouterUtil
+                                                .assetOpnameDetailFormScreenRoute,
+                                            arguments: widget
+                                                .argumentsAssetGrow
+                                                .assetGrowResponseModel
+                                                .data![0]);
+                                      }
+                                    },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                height: 66,
+                                decoration: BoxDecoration(
+                                  color: widget
+                                              .argumentsAssetGrow
+                                              .assetGrowResponseModel
+                                              .data![0]
+                                              .isOpnameReserved! ==
+                                          ''
+                                      ? Colors.grey
+                                      : Colors.green,
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('OPNAME',
+                                        style: TextStyle(
+                                            fontSize:
+                                                GeneralUtil.fontSize(context) *
+                                                    0.43,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.white,
-                                size: 20,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                                      size: 20,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                     ],
                   ))
             ],
