@@ -1348,6 +1348,24 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                     .propertyFacility ??
                 []));
         dataContent.add(DataContent(
+            'Colour',
+            widget
+                .argumentsAssetGrow.assetGrowResponseModel.data![0].colourName!,
+            false,
+            false,
+            []));
+        dataContent.add(DataContent(
+            'Serial No.',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0].serialNo!,
+            false,
+            false, []));
+
+        dataContent.add(DataContent(
+            'IMEI',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0].imei!,
+            false,
+            false, []));
+        dataContent.add(DataContent(
             'Asset Specification',
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
                     .assetSpecification ??
@@ -1426,7 +1444,18 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                 []));
         dataContent.add(DataContent(
             'Depreciation Commercial',
-            '${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryCommName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].depreCategoryCommName!}',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                .methodTypeComm!,
+            false,
+            false,
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                    .propertyFacility ??
+                []));
+
+        dataContent.add(DataContent(
+            'Depreciation Fiscal',
+            widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
+                .methodTypeFisc!,
             false,
             false,
             widget.argumentsAssetGrow.assetGrowResponseModel.data![0]
@@ -1794,12 +1823,70 @@ class _AssetOpnameDetailScreenState extends State<AssetOpnameDetailScreen> {
                                       GeneralUtil.fontSize(context) * 0.45,
                                   color: Colors.white),
                             ),
-                            Text(
-                              'User : ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userCode!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userName!} - ${widget.argumentsAssetGrow.assetGrowResponseModel.data![0].userPositionName!}',
-                              style: TextStyle(
-                                  fontSize:
-                                      GeneralUtil.fontSize(context) * 0.45,
-                                  color: Colors.white),
+                            Row(
+                              children: [
+                                Text(
+                                  'User : ',
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  widget
+                                      .argumentsAssetGrow
+                                      .assetGrowResponseModel
+                                      .data![0]
+                                      .userCode!,
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  widget
+                                              .argumentsAssetGrow
+                                              .assetGrowResponseModel
+                                              .data![0]
+                                              .userCode! ==
+                                          ''
+                                      ? ''
+                                      : '-',
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  widget
+                                      .argumentsAssetGrow
+                                      .assetGrowResponseModel
+                                      .data![0]
+                                      .userName!,
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  '-',
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  widget
+                                      .argumentsAssetGrow
+                                      .assetGrowResponseModel
+                                      .data![0]
+                                      .userPositionName!,
+                                  style: TextStyle(
+                                      fontSize:
+                                          GeneralUtil.fontSize(context) * 0.45,
+                                      color: Colors.white),
+                                ),
+                              ],
                             )
                           ],
                         ),

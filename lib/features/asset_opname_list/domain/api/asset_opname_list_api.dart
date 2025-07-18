@@ -49,7 +49,7 @@ class AssetOpnameListApi {
     } on SocketException {
       throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
-      throw ex.toString();
+      throw 'Terjadi Kesalahan Sistem, silahkan coba kembali';
     }
   }
 
@@ -87,7 +87,7 @@ class AssetOpnameListApi {
     } on SocketException {
       throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
-      throw ex.toString();
+      throw 'Terjadi Kesalahan Sistem, silahkan coba kembali';
     }
   }
 
@@ -126,7 +126,7 @@ class AssetOpnameListApi {
     } on SocketException {
       throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
-      throw ex.toString();
+      throw 'Terjadi Kesalahan Sistem, silahkan coba kembali';
     }
   }
 
@@ -164,7 +164,7 @@ class AssetOpnameListApi {
     } on SocketException {
       throw 'No Internet connection. Make sure it is connected to wifi or data, then try again';
     } catch (ex) {
-      throw ex.toString();
+      throw 'Terjadi Kesalahan Sistem, silahkan coba kembali';
     }
   }
 }

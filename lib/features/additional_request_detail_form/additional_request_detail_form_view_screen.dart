@@ -127,25 +127,27 @@ class _AdditionalRequestDetailFormViewScreenState
     setState(() {});
   }
 
-  int _calculateNewCursorPosition(String oldText, String newText, int oldCursorPosition) {
+  int _calculateNewCursorPosition(
+      String oldText, String newText, int oldCursorPosition) {
     // Count dots before cursor in old text
-    final String textBeforeCursor = oldText.substring(0, oldCursorPosition.clamp(0, oldText.length));
+    final String textBeforeCursor =
+        oldText.substring(0, oldCursorPosition.clamp(0, oldText.length));
     final int dotsBeforeCursor = textBeforeCursor.split('.').length - 1;
-    
+
     // Calculate position in raw (unformatted) text
     final int rawPosition = oldCursorPosition - dotsBeforeCursor;
-    
+
     // Find corresponding position in new formatted text
     int newPosition = 0;
     int rawCount = 0;
-    
+
     for (int i = 0; i < newText.length && rawCount < rawPosition; i++) {
       if (newText[i] != '.') {
         rawCount++;
       }
       newPosition = i + 1;
     }
-    
+
     return newPosition.clamp(0, newText.length);
   }
 
@@ -153,11 +155,11 @@ class _AdditionalRequestDetailFormViewScreenState
     if (_isFormatting) return;
 
     _isFormatting = true;
-    
+
     // Store current cursor position
     final int cursorPosition = _priceCtrl.selection.baseOffset;
     final String oldText = _priceCtrl.text;
-    
+
     final String rawInput = oldText.replaceAll('.', ''); // Remove existing dots
     final int? value = int.tryParse(rawInput);
 
@@ -166,10 +168,11 @@ class _AdditionalRequestDetailFormViewScreenState
 
       // Format the value for display
       final String formattedText = _currencyFormat.format(value);
-      
+
       // Calculate new cursor position to preserve user's intended position
-      final int newCursorPosition = _calculateNewCursorPosition(oldText, formattedText, cursorPosition);
-      
+      final int newCursorPosition =
+          _calculateNewCursorPosition(oldText, formattedText, cursorPosition);
+
       _priceCtrl.value = TextEditingValue(
         text: formattedText,
         selection: TextSelection.collapsed(offset: newCursorPosition),
@@ -297,7 +300,7 @@ class _AdditionalRequestDetailFormViewScreenState
               ),
               Container(
                 width: double.infinity,
-                height: 45,
+                padding: EdgeInsets.only(bottom: 8.0),
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -456,7 +459,7 @@ class _AdditionalRequestDetailFormViewScreenState
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Attachments List',
+                  'File Uploaded',
                   style: TextStyle(
                       fontSize: GeneralUtil.fontSize(context) * 0.55,
                       color: Colors.white),
@@ -468,7 +471,7 @@ class _AdditionalRequestDetailFormViewScreenState
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Container(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                           decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(12)),
@@ -599,7 +602,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -777,7 +780,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -810,7 +813,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -840,7 +843,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -917,7 +920,7 @@ class _AdditionalRequestDetailFormViewScreenState
         ),
         Container(
           width: double.infinity,
-          height: 45,
+          padding: EdgeInsets.only(bottom: 8.0),
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),

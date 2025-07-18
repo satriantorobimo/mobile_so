@@ -1488,7 +1488,7 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
-            height: 45,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -1673,7 +1673,7 @@ class _AdditionalRequestDetailFormScreenState
                 },
           child: Container(
             width: double.infinity,
-            height: 45,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
@@ -2489,7 +2489,7 @@ class _AdditionalRequestDetailFormScreenState
           },
           child: Container(
             width: double.infinity,
-            height: 45,
+            padding: EdgeInsets.only(bottom: 8.0),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.5, color: Color(0xFFE6E7E8)),
